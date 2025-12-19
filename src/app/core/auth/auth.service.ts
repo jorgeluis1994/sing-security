@@ -10,7 +10,9 @@ export class AuthService {
 
     constructor(private http: HttpClient) { }
 
-    login(data: { login: string; password: string }) {
+    login(data: { user: string; password: string }) {
+
+        
         return this.http.post<any>(
             `${this.baseUrl}${this.auth.endpoints.login}`,
             data

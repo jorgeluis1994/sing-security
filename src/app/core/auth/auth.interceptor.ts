@@ -1,22 +1,21 @@
-import { HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { AuthService } from "./auth.service";
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthService } from './auth.service';
+import { MessageService } from 'primeng/api';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-    constructor(private auth: AuthService) { }
+export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const toast = inject(MessageService);
 
-    intercept(req: HttpRequest<any>, next: HttpHandler) {
-        const token = this.auth.token;
+  const token = authService.isAuthenticated();
 
-        if (!token) return next.handle(req);
+  if (token) {
+    req = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
 
-        return next.handle(
-            req.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }),
-        );
-    }
-}
+  return next(req);
+};
