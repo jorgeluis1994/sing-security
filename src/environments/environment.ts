@@ -27,7 +27,7 @@ export const environment = {
     tokenTtlMinutes: 15,
 
     endpoints: {
-      validateToken: '/signing/token/validate',
+      validateToken: '/token/validate',
       consumeToken: '/signing/token/consume',
       getDocument: '/signing/document',
       signDocument: '/signing/document/sign',

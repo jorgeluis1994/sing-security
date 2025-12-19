@@ -11,6 +11,12 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),
   },
+  // 🔓 Público: firma por token
+  {
+    path: 'sign',
+    loadChildren: () =>
+      import('./features/signing/sign.routes').then(m => m.SIGN_ROUTES),
+  },
 
   // 🔐 Privado (con layout)
   {
