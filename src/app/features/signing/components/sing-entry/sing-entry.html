@@ -1,1 +1,47 @@
-<p>sing-entry works!</p>
+<div class="sign-container">
+
+  <p-steps
+    [model]="steps"
+    [activeIndex]="activeIndex"
+    [readonly]="true"
+    styleClass="pro-stepper">
+  </p-steps>
+
+  <div class="step-card">
+
+    <ng-container [ngSwitch]="activeIndex">
+
+      <!-- Documento -->
+      <div *ngSwitchCase="1">
+        <app-pdf-preview></app-pdf-preview> 
+
+        <div class="actions">
+          <button pButton label="Firmar" icon="pi pi-pencil" (click)="next()"></button>
+        </div>
+      </div>
+
+      <!-- Firma -->
+      <div *ngSwitchCase="2">
+        <!-- <app-sign-pad></app-sign-pad> -->
+
+        <div class="actions">
+          <button
+            pButton
+            label="Confirmar firma"
+            icon="pi pi-check"
+            (click)="next()">
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirmación -->
+      <div *ngSwitchCase="3" class="confirmation">
+        <i class="pi pi-check-circle"></i>
+        <h2>Documento firmado correctamente</h2>
+        <p>El proceso se completó con éxito.</p>
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>

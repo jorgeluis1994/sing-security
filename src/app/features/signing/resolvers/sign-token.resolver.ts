@@ -33,7 +33,7 @@ export class SignTokenResolver implements Resolve<boolean | RedirectCommand> {
                     : new RedirectCommand(this.router.parseUrl('/sign'));
             }),
             catchError(() =>
-                of(new RedirectCommand(this.router.parseUrl('/auth')))
+                of(new RedirectCommand(this.router.parseUrl('/auth/login')))
             )
         );
     }

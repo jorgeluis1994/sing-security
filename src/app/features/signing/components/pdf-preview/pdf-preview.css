@@ -1,0 +1,70 @@
+/* Contenedor general */
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Card principal */
+:host ::ng-deep .p-card {
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+/* Header del card */
+:host ::ng-deep .p-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Toolbar */
+:host ::ng-deep .p-toolbar {
+  background: #f9fafb;
+  border: none;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+/* Contenedor PDF */
+.pdf-container {
+  background: #f3f4f6;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  overflow: hidden;
+}
+
+/* Visor PDF */
+.pdf-container ngx-extended-pdf-viewer {
+  display: block;
+  border-radius: 12px;
+}
+
+/* Skeleton */
+:host ::ng-deep .p-skeleton {
+  border-radius: 12px;
+}
+
+/* Aviso documento leído */
+.end-reached {
+  margin-top: 1rem;
+  padding: 0.75rem 1.2rem;
+  background: linear-gradient(90deg, #ecfdf5, #d1fae5);
+  color: #065f46;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid #a7f3d0;
+}
+
+/* Botones deshabilitados */
+:host ::ng-deep .p-button:disabled {
+  opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pdf-container {
+    max-height: 500px;
+  }
+}
