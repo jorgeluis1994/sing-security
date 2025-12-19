@@ -7,8 +7,19 @@ export const environment = {
   },
 
   api: {
-    baseUrl: 'https://api.firmasegura.work',
+    baseUrl: 'http://192.168.0.68:3002',
     timeout: 15000,
+  },
+
+  auth: {
+    endpoints: {
+      login: '/auth/login',
+      register: '/auth/register',
+    },
+
+    storage: {
+      tokenKey: 'access_token',
+    },
   },
 
   signing: {
@@ -28,9 +39,5 @@ export const environment = {
       linear: true,
       showIcons: true,
     },
-  },
-
-  security: {
-    allowRefreshWithToken: false,
   },
 };
