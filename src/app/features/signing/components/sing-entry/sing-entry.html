@@ -19,11 +19,14 @@
             <p-card class="step-card">
 
                 <!-- Paso 0 -->
+                <!-- Paso 0 -->
                 @if (activeStep === 0) {
 
-                <app-dynamic-form [pageFields]="formDinamic">
+                <app-dynamic-form [formConfig]="currentForm" [pageIndex]="currentPageIndex">
                 </app-dynamic-form>
+
                 }
+
 
                 <!-- Paso 1 -->
                 @if (activeStep === 1) {

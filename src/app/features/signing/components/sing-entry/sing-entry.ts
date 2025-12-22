@@ -11,6 +11,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 
 import { DocumentService, SessionDocument } from '../../services/document.service';
 import { DynamicForm } from "../../../../shared/components/dynamic-form/dynamic-form";
+import { DynamicFormConfig } from '../../../../shared/models/forms-dynamic.entity';
 
 @Component({
   selector: 'app-sing-entry',
@@ -31,71 +32,52 @@ import { DynamicForm } from "../../../../shared/components/dynamic-form/dynamic-
 })
 export class SingEntry implements OnInit {
 
-  // Servicios
   private documentService = inject(DocumentService);
 
-  formDinamic = [
+  // formDinamic: DynamicFormConfig[] = [ /* igual que ahora */];
+
+  // 🔹 FORM ACTUAL
+  formDinamic: DynamicFormConfig[] = [
     {
-      "name": "Completar la siguiente información requerida. Los campos marcados con ( * ) son obligatorios",
-      "role": "acquirer",
-      "pages": [
+      name: 'Completar la siguiente información requerida. Los campos marcados con ( * ) son obligatorios',
+      role: 'acquirer',
+      pages: [
         [
           {
-            "id": 1,
-            "name": "Nombre *",
-            "type": "Text",
-            "class": "",
-            "items": [],
-            "style": "",
-            "weight": [],
-            "attributes": [],
-            "var_answer": "var_first_name",
-            "description": ""
+            id: 3,
+            name: 'Tipo de Identificación *',
+            type: 'Radio',
+            class: 'col-12',
+            items: ['Cédula', 'RUC'],
+            style: '',
+            weight: [0, 1],
+            attributes: [],
+            var_answer: 'rad_identification_type',
+            description: ''
           },
           {
-            "id": 2,
-            "name": "Apellido *",
-            "type": "Text",
-            "class": "",
-            "items": [],
-            "style": "",
-            "weight": [],
-            "attributes": [],
-            "var_answer": "var_last_name",
-            "description": ""
-          },
-          {
-            "id": 3,
-            "name": "Tipo de Identificación *",
-            "type": "Radio",
-            "class": "",
-            "items": ["Cédula", "RUC"],
-            "style": "",
-            "weight": [0, 1],
-            "attributes": [],
-            "var_answer": "rad_identification_type",
-            "description": ""
-          },
-          {
-            "id": 4,
-            "name": "Número de Identificación (Cédula o RUC) *",
-            "type": "Text",
-            "class": "",
-            "items": [],
-            "style": "",
-            "weight": [],
-            "attributes": [],
-            "var_answer": "var_identification_number",
-            "description": ""
+            id: 4,
+            name: 'Número de Identificación (Cédula o RUC) *',
+            type: 'Text',
+            class: 'col-12',
+            items: [],
+            style: '',
+            weight: [],
+            attributes: [],
+            var_answer: 'var_identification_number',
+            description: ''
           }
         ]
       ],
-      "description": ""
+      description: ''
     }
-  ]
+  ];
+
+  currentForm!: DynamicFormConfig;
 
 
-  // Stepper
+  currentPageIndex = 0;
+
   steps = [
     { label: 'Información', icon: 'pi pi-user' },
     { label: 'Subir documentos', icon: 'pi pi-upload' },
@@ -103,17 +85,13 @@ export class SingEntry implements OnInit {
   ];
 
   activeStep = 0;
-
-
-  // Data
   pdfDocs: SessionDocument[] = [];
 
   ngOnInit(): void {
-    // Cargar documentos desde sesión
+    this.currentForm = this.formDinamic[0];
     this.pdfDocs = this.documentService.getFromSession();
   }
 
-  // Control de navegación entre pasos
   goToStep(step: number): void {
     if (step < this.activeStep) {
       this.activeStep = step;
@@ -125,7 +103,6 @@ export class SingEntry implements OnInit {
     this.activeStep = step;
   }
 
-  // Validaciones al avanzar
   canAdvance(): boolean {
     return true;
   }

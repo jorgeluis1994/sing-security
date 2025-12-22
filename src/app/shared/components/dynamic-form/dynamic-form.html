@@ -1,53 +1,65 @@
-<form *ngIf="form" [formGroup]="form" class="p-fluid">
+<form [formGroup]="form" class="p-fluid">
 
-  <!-- <pre class="mb-4 p-3 bg-gray-100 border-round text-sm">
-{{ form.value | json }}
-  </pre> -->
+  <!-- IMPORTANTE: grid también debe ser fluid -->
+  <div class="grid p-fluid">
 
-  <div *ngFor="let field of fields" class="mb-4">
+    @for (field of fields; track field.id) {
 
-    <!-- LABEL -->
-    <label class="font-medium mb-2 block">
-      {{ field.name }}
-    </label>
+      <div
+        class="mb-4 col-12"
+        [ngClass]="field.class || 'col-12'">
 
-    <!-- TEXT -->
-    <input
-      *ngIf="field.type === 'Text'"
-      pInputText
-      [formControlName]="field.var_answer"
-      class="w-full"
-    />
-
-    <!-- SELECT -->
-    <p-select
-      *ngIf="field.type === 'Select'"
-      [options]="field.items"
-      [formControlName]="field.var_answer"
-      placeholder="Seleccione"
-      class="w-full">
-    </p-select>
-
-    <!-- RADIO -->
-    <div *ngIf="field.type === 'Radio'" class="flex flex-column gap-2">
-      <div *ngFor="let item of field.items" class="flex align-items-center gap-2">
-        <p-radioButton
-          [inputId]="field.var_answer + item"
-          [value]="item"
-          [formControlName]="field.var_answer">
-        </p-radioButton>
-        <label [for]="field.var_answer + item">
-          {{ item }}
+        <!-- LABEL -->
+        <label class="font-medium mb-2 block">
+          {{ field.name }}
         </label>
-      </div>
-    </div>
 
-    <!-- ERROR -->
-    <small
-      class="p-error"
-      *ngIf="form.get(field.var_answer)?.invalid && form.get(field.var_answer)?.touched">
-      Campo obligatorio
-    </small>
+        <!-- TEXT -->
+        @if (field.type === 'Text') {
+          <input
+            pInputText
+            class="w-full"
+            [formControlName]="field.var_answer" />
+        }
+
+        <!-- SELECT -->
+        @if (field.type === 'Select') {
+          <p-select
+            [options]="field.items"
+            [formControlName]="field.var_answer"
+            placeholder="Seleccione"
+            styleClass="w-full">
+          </p-select>
+        }
+
+        <!-- RADIO -->
+        @if (field.type === 'Radio') {
+          <div class="w-full flex gap-4 mt-2 flex-wrap">
+            @for (item of field.items; track item) {
+              <div class="flex align-items-center gap-2">
+                <p-radioButton
+                  [inputId]="field.var_answer + item"
+                  [value]="item"
+                  [formControlName]="field.var_answer">
+                </p-radioButton>
+                <label [for]="field.var_answer + item">
+                  {{ item }}
+                </label>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- ERROR -->
+        @if (form.get(field.var_answer)?.invalid && form.get(field.var_answer)?.touched) {
+          <small class="p-error block mt-1">
+            Campo obligatorio
+          </small>
+        }
+
+      </div>
+
+    }
 
   </div>
 
