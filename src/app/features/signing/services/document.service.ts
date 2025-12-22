@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface SessionDocument {
   name: string;
@@ -14,10 +14,20 @@ export class DocumentService {
 
   private SESSION_KEY = 'SIGN_SESSION_DOCS';
 
-  constructor(private http: HttpClient) { }
+  // 🧠 Estado reactivo
+  private docsSubject = new BehaviorSubject<SessionDocument[]>([]);
+  docs$ = this.docsSubject.asObservable();
+
+  constructor(private http: HttpClient) {
+    // 🔁 Hidratar desde sesión al iniciar
+    const saved = sessionStorage.getItem(this.SESSION_KEY);
+    if (saved) {
+      this.docsSubject.next(JSON.parse(saved));
+    }
+  }
 
   /* ==============================
-     1️⃣ CARGAR PDF DESDE URL
+     🌐 CARGAR PDF DESDE URL
      ============================== */
   loadPdf(url: string): Observable<Blob> {
     console.log('🌐 Cargando PDF desde URL:', url);
@@ -25,31 +35,60 @@ export class DocumentService {
   }
 
   /* ==============================
-     2️⃣ GUARDAR PDFS EN SESIÓN
+     🔁 REEMPLAZAR TODO (uso puntual)
      ============================== */
   async saveToSession(files: File[]): Promise<void> {
     const docs = await Promise.all(files.map(f => this.fileToBase64(f)));
-    sessionStorage.setItem(this.SESSION_KEY, JSON.stringify(docs));
+    this.setDocs(docs);
     console.log('🗂️ PDFs guardados en sesión:', docs);
   }
 
   /* ==============================
-     3️⃣ OBTENER PDFS DE SESIÓN
+     ➕ AGREGAR NUEVOS (CLAVE)
+     ============================== */
+  async addFiles(files: File[]): Promise<void> {
+    const existing = this.docsSubject.value;
+
+    const newDocs = await Promise.all(
+      files.map(f => this.fileToBase64(f))
+    );
+
+    this.setDocs([...existing, ...newDocs]);
+  }
+
+  /* ==============================
+     ❌ ELIMINAR UNO
+     ============================== */
+  removeAt(index: number): void {
+    const docs = [...this.docsSubject.value];
+    docs.splice(index, 1);
+    this.setDocs(docs);
+  }
+
+  /* ==============================
+     📥 OBTENER ACTUAL (sync)
      ============================== */
   getFromSession(): SessionDocument[] {
-    const raw = sessionStorage.getItem(this.SESSION_KEY);
-    return raw ? JSON.parse(raw) : [];
+    return this.docsSubject.value;
   }
 
   /* ==============================
-     4️⃣ LIMPIAR SESIÓN
+     🧹 LIMPIAR TODO
      ============================== */
-  clearSession() {
-    sessionStorage.removeItem(this.SESSION_KEY);
+  clearSession(): void {
+    this.setDocs([]);
   }
 
   /* ==============================
-     UTIL
+     🧠 SET CENTRALIZADO
+     ============================== */
+  private setDocs(docs: SessionDocument[]): void {
+    this.docsSubject.next(docs);
+    sessionStorage.setItem(this.SESSION_KEY, JSON.stringify(docs));
+  }
+
+  /* ==============================
+     🔧 UTIL
      ============================== */
   private fileToBase64(file: File): Promise<SessionDocument> {
     return new Promise(resolve => {

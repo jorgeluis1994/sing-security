@@ -1,0 +1,21 @@
+:host ::ng-deep .p-blockui {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+}
+
+.loading-overlay {
+  position: fixed;           /* 🔥 CLAVE */
+  inset: 0;                  /* top:0 right:0 bottom:0 left:0 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.loading-text {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--text-color-secondary);
+}

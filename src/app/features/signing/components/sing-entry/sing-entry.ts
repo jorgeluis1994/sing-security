@@ -44,18 +44,6 @@ export class SingEntry implements OnInit {
       pages: [
         [
           {
-            id: 3,
-            name: 'Tipo de Identificación *',
-            type: 'Radio',
-            class: 'col-12',
-            items: ['Cédula', 'RUC'],
-            style: '',
-            weight: [0, 1],
-            attributes: [],
-            var_answer: 'rad_identification_type',
-            description: ''
-          },
-          {
             id: 4,
             name: 'Número de Identificación (Cédula o RUC) *',
             type: 'Text',
@@ -89,7 +77,9 @@ export class SingEntry implements OnInit {
 
   ngOnInit(): void {
     this.currentForm = this.formDinamic[0];
-    this.pdfDocs = this.documentService.getFromSession();
+    this.documentService.docs$.subscribe(docs => {
+    this.pdfDocs = docs;
+  });
   }
 
   goToStep(step: number): void {

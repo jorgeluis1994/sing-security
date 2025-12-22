@@ -8,6 +8,7 @@ import {
 } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { TokenAccessService } from '../services/sign-token.service';
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Injectable({ providedIn: 'root' })
 export class SignTokenResolver implements Resolve<boolean | RedirectCommand> {
@@ -15,27 +16,36 @@ export class SignTokenResolver implements Resolve<boolean | RedirectCommand> {
 
     constructor(
         private tokenService: TokenAccessService,
-        private router: Router
+        private router: Router,
+        private loading: LoadingService
     ) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    resolve(route: ActivatedRouteSnapshot) {
 
-        const token = route.queryParamMap.get('token');
-        
+    const token = route.queryParamMap.get('token');
+    
 
-        if (!token) {
-            return new RedirectCommand(this.router.parseUrl('auth/login'));
-        }
-
-        return this.tokenService.validateToken(token).pipe(
-            map((resp: any) => {
-                return resp.success === true
-                    ? true
-                    : new RedirectCommand(this.router.parseUrl('/sign'));
-            }),
-            catchError(() =>
-                of(new RedirectCommand(this.router.parseUrl('/auth/login')))
-            )
-        );
+    if (!token) {
+      return new RedirectCommand(this.router.parseUrl('auth/login'));
     }
+
+    // 🔄 MOSTRAR LOADING
+    this.loading.show('Validando token...');
+
+    debugger
+
+    return this.tokenService.validateToken(token).pipe(
+      map((resp: any) => {
+        this.loading.hide();
+
+        return resp.success === true
+          ? true
+          : new RedirectCommand(this.router.parseUrl('/sign'));
+      }),
+      catchError(() => {
+        this.loading.hide();
+        return of(new RedirectCommand(this.router.parseUrl('/auth/login')));
+      })
+    );
+  }
 }

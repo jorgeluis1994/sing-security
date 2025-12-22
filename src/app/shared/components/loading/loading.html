@@ -1,0 +1,11 @@
+@if (loading) {
+  <p-blockUI [blocked]="true">
+    <div class="loading-overlay">
+      <p-progressSpinner></p-progressSpinner>
+
+      @if (message) {
+        <p class="loading-text">{{ message }}</p>
+      }
+    </div>
+  </p-blockUI>
+}
