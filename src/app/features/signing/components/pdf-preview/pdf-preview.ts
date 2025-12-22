@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
-import { NgxExtendedPdfViewerModule  } from 'ngx-extended-pdf-viewer';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 @Component({
   selector: 'app-pdf-preview',
+  standalone: true,
   imports: [
-
     CommonModule,
-    NgxExtendedPdfViewerModule ,
+    NgxExtendedPdfViewerModule,
     CardModule,
     ToolbarModule,
     ButtonModule,
@@ -22,17 +22,31 @@ import { NgxExtendedPdfViewerModule  } from 'ngx-extended-pdf-viewer';
   templateUrl: './pdf-preview.html',
   styleUrl: './pdf-preview.css',
 })
-export class PdfPreview {
+export class PdfPreview implements OnInit {
 
-  /** Blob o URL segura */
-  @Input() pdfSrc!: Blob | string;
+  /** URL del PDF (blob: o https) */
+  @Input({ required: true }) pdfSrc!: string;
 
   loading = true;
   hasReachedEnd = false;
 
-  ngOnInit() {}
+  ngOnInit(): void {
+
+    if (!this.pdfSrc) {
+      console.error('❌ pdfSrc llegó vacío o undefined');
+    }
+
+    if (this.pdfSrc?.startsWith('blob:')) {
+      console.log('🟢 Es una Blob URL válida');
+    } else if (this.pdfSrc?.startsWith('http')) {
+      console.warn('🟡 Es URL http(s) — puede fallar por CORS');
+    } else {
+      console.error('🔴 Formato de pdfSrc no reconocido');
+    }
+  }
 
   onPdfLoaded() {
+    console.log('✅ PDF renderizado correctamente');
     this.loading = false;
   }
 
@@ -43,7 +57,7 @@ export class PdfPreview {
 
     if (atBottom) {
       this.hasReachedEnd = true;
+      console.log('📜 Usuario llegó al final del PDF');
     }
   }
-
 }

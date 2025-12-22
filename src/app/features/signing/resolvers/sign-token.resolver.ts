@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
     Resolve,
     ActivatedRouteSnapshot,
@@ -12,6 +12,7 @@ import { TokenAccessService } from '../services/sign-token.service';
 @Injectable({ providedIn: 'root' })
 export class SignTokenResolver implements Resolve<boolean | RedirectCommand> {
 
+
     constructor(
         private tokenService: TokenAccessService,
         private router: Router
@@ -23,7 +24,7 @@ export class SignTokenResolver implements Resolve<boolean | RedirectCommand> {
         
 
         if (!token) {
-            return new RedirectCommand(this.router.parseUrl('/auth'));
+            return new RedirectCommand(this.router.parseUrl('auth/login'));
         }
 
         return this.tokenService.validateToken(token).pipe(

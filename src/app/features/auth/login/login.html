@@ -1,41 +1,39 @@
-<div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
-  <div class="row w-100">
-    <div class="col-12 col-md-4 mx-auto">
+<div class="auth-container">
+  <p-card class="auth-card">
 
-      <p-card header="Login">
+    <h2 class="auth-title">Login</h2>
+    <p class="auth-subtitle">Ingresa tus credenciales</p>
 
-        <form [formGroup]="formLogin" (ngSubmit)="submit()">
+    <form
+      [formGroup]="formLogin"
+      (ngSubmit)="submit()"
+      class="auth-form"
+    >
 
-          <div class="mb-3">
-            <label class="form-label">Usuario</label>
-            <input
-              pInputText
-              formControlName="user"
-              class="w-100"
-            />
-          </div>
+      <div class="field">
+        <label>Usuario</label>
+        <input
+          pInputText
+          formControlName="user"
+        />
+      </div>
 
-          <div class="mb-3">
-            <label class="form-label">Contraseña</label>
-            <p-password
-              formControlName="password"
-              [feedback]="false"
-              toggleMask
-              class="w-100"
-            ></p-password>
-          </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <p-password
+          formControlName="password"
+          [feedback]="false"
+          toggleMask
+        ></p-password>
+      </div>
 
-          <button
-            pButton
-            label="Ingresar"
-            class="w-100"
-            type="submit"
-          ></button>
+      <p-button
+        label="Ingresar"
+        type="submit"
+        class="w-full"
+      ></p-button>
 
-        </form>
+    </form>
 
-      </p-card>
-
-    </div>
-  </div>
+  </p-card>
 </div>

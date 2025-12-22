@@ -1,0 +1,38 @@
+/* Contenedor ocupa todo el ancho */
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Steps ancho completo */
+.app-steps {
+  width: 100%;
+}
+
+/* Items distribuidos de forma uniforme */
+.app-steps .p-steps-item {
+  flex: 1;
+}
+
+/* Centrar contenido */
+.app-steps .p-steps-item-link {
+  justify-content: center;
+}
+
+/* Icono */
+.app-steps .p-steps-number,
+.app-steps .p-steps-icon {
+  font-size: 1.2rem;
+}
+
+/* Paso activo */
+.app-steps .p-steps-item.p-highlight .p-steps-number,
+.app-steps .p-steps-item.p-highlight .p-steps-icon {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+/* Línea entre pasos */
+.app-steps .p-steps-item:before {
+  top: 50%;
+}

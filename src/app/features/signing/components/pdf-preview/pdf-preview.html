@@ -1,25 +1,12 @@
 <p-card header="Documento a firmar">
-
-  <p-toolbar>
-    <div class="p-toolbar-group-start">
-      <p-tag value="Solo lectura" severity="info"></p-tag>
-    </div>
-
-    <div class="p-toolbar-group-end">
-      <p-button icon="pi pi-search-plus" class="p-button-text" disabled>dfg</p-button>
-      <p-button icon="pi pi-search-minus" class="p-button-text" disabled>fdgdf</p-button>
-    </div>
-  </p-toolbar>
-
-  <p-skeleton *ngIf="loading" height="600px"></p-skeleton>
-
   <div
-    *ngIf="!loading"
     class="pdf-container"
-    (scroll)="onScroll($event)">
+    (scroll)="onScroll($event)"
+    [class.hidden]="loading">
 
     <ngx-extended-pdf-viewer
       [src]="pdfSrc"
+      [textLayer]="true"
       height="800px"
       [showPrintButton]="false"
       [showDownloadButton]="false"
@@ -32,7 +19,6 @@
     </ngx-extended-pdf-viewer>
 
   </div>
-
 </p-card>
 
 <div *ngIf="hasReachedEnd" class="end-reached">

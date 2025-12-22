@@ -1,82 +1,9 @@
-/* ===== CONTENEDOR ===== */
-.sign-container {
-  max-width: 1100px;
+.form-card {
+  background-color: aliceblue;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 2rem 1rem;
 }
 
-/* ===== STEPPER ===== */
-:host ::ng-deep .pro-stepper {
-  margin-bottom: 2.5rem;
-}
-
-:host ::ng-deep .pro-stepper .p-steps-item {
-  flex: 1;
-}
-
-:host ::ng-deep .pro-stepper .p-steps-number {
-  width: 36px;
-  height: 36px;
-  font-weight: 600;
-  background: #e5e7eb;
-  color: #374151;
-}
-
-:host ::ng-deep .pro-stepper .p-steps-item.p-highlight .p-steps-number {
-  background: #2563eb;
-  color: #ffffff;
-}
-
-:host ::ng-deep .pro-stepper .p-steps-title {
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-/* ===== TARJETA ===== */
-.step-card {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 2.5rem;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
-}
-
-/* ===== ACCIONES ===== */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 2rem;
-}
-
-.actions button {
-  padding: 0.75rem 2rem;
-  font-weight: 600;
-}
-
-/* ===== CONFIRMACIÓN ===== */
-.confirmation {
-  text-align: center;
-  padding: 3rem 1rem;
-}
-
-.confirmation i {
-  font-size: 3.5rem;
-  color: #22c55e;
-  margin-bottom: 1rem;
-}
-
-.confirmation h2 {
-  font-size: 1.75rem;
-  color: #111827;
-  margin-bottom: 0.5rem;
-}
-
-.confirmation p {
-  color: #6b7280;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .step-card {
-    padding: 1.5rem;
-  }
+:host ::ng-deep .p-card-content {
+  padding-top: 1rem;
 }

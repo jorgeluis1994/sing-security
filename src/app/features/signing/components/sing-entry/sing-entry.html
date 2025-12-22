@@ -1,47 +1,44 @@
-<div class="sign-container">
+<div class="container">
 
-  <p-steps
-    [model]="steps"
-    [activeIndex]="activeIndex"
-    [readonly]="true"
-    styleClass="pro-stepper">
-  </p-steps>
-
-  <div class="step-card">
-
-    <ng-container [ngSwitch]="activeIndex">
-
-      <!-- Documento -->
-      <div *ngSwitchCase="1">
-        <app-pdf-preview></app-pdf-preview> 
-
-        <div class="actions">
-          <button pButton label="Firmar" icon="pi pi-pencil" (click)="next()"></button>
+    <!-- STEPPER -->
+    <div class="row py-3">
+        <div class="col-12">
+            <app-app-stepper [steps]="steps" [activeIndex]="activeStep" (stepChange)="goToStep($event)">
+            </app-app-stepper>
         </div>
-      </div>
+    </div>
 
-      <!-- Firma -->
-      <div *ngSwitchCase="2">
-        <!-- <app-sign-pad></app-sign-pad> -->
+    <!-- CONTENIDO DEL PASO -->
+    <div class="row mt-4">
+        <div class="col-12">
 
-        <div class="actions">
-          <button
-            pButton
-            label="Confirmar firma"
-            icon="pi pi-check"
-            (click)="next()">
-          </button>
+            @if (activeStep === 0 ) {
+            <app-dynamic-form [pageFields]="pageFields" ></app-dynamic-form>
+            }
+
+            @if (activeStep === 1 && pdfSrc) {
+            <app-pdf-preview [pdfSrc]="pdfSrc"></app-pdf-preview>
+            }
+
+
+
         </div>
-      </div>
+    </div>
 
-      <!-- Confirmación -->
-      <div *ngSwitchCase="3" class="confirmation">
-        <i class="pi pi-check-circle"></i>
-        <h2>Documento firmado correctamente</h2>
-        <p>El proceso se completó con éxito.</p>
-      </div>
+    <!-- BOTONES -->
+    <div class="row mt-4 py-5">
+        <div class="col-12 d-flex justify-content-between">
 
-    </ng-container>
+            <button pButton label="Atrás" icon="pi pi-arrow-left" (click)="goToStep(activeStep - 1)"
+                [disabled]="activeStep === 0">
+            </button>
 
-  </div>
+            <button pButton label="Siguiente" icon="pi pi-arrow-right" iconPos="right"
+                (click)="goToStep(activeStep + 1)" [disabled]="!canAdvance()">
+            </button>
+
+        </div>
+    </div>
+
+
 </div>

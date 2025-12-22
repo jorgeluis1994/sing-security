@@ -1,0 +1,51 @@
+<form [formGroup]="form" class="p-fluid">
+
+  <div *ngFor="let field of pageFields" class="mb-4">
+
+    <!-- LABEL -->
+    <label class="font-medium mb-2 block">
+      {{ field.name }}
+    </label>
+
+    <!-- TEXT -->
+    <input
+      *ngIf="field.type === 'Text'"
+      pInputText
+      [formControlName]="field.var_answer"
+      class="w-full"
+    />
+
+    <!-- SELECT -->
+    <p-select
+      *ngIf="field.type === 'Select'"
+      [options]="field.items"
+      [formControlName]="field.var_answer"
+      placeholder="Seleccione"
+      class="w-full">
+    </p-select>
+
+    <!-- RADIO -->
+    <div *ngIf="field.type === 'Radio'" class="flex flex-column gap-2">
+      <p-radioButton
+        *ngFor="let item of field.items"
+        [inputId]="field.var_answer + item"
+        [value]="item"
+        [formControlName]="field.var_answer">
+      </p-radioButton>
+      <label
+        *ngFor="let item of field.items"
+        [for]="field.var_answer + item">
+        {{ item }}
+      </label>
+    </div>
+
+    <!-- ERROR -->
+    <small
+      class="p-error"
+      *ngIf="form.get(field.var_answer)?.invalid && form.get(field.var_answer)?.touched">
+      Campo obligatorio
+    </small>
+
+  </div>
+
+</form>
