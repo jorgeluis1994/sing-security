@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,9 +7,9 @@ import {
   Validators
 } from '@angular/forms';
 
-import { InputText } from 'primeng/inputtext';
+import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { RadioButton } from 'primeng/radiobutton';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -17,29 +17,37 @@ import { RadioButton } from 'primeng/radiobutton';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    InputText,
+    InputTextModule,
     SelectModule,
-    RadioButton
+    RadioButtonModule
   ],
   templateUrl: './dynamic-form.html',
   styleUrl: './dynamic-form.css',
 })
-export class DynamicForm implements OnInit {
+export class DynamicForm implements OnChanges {
 
-  @Input() pageFields: any[] = [];
+  @Input() pageFields: any[] = []; // aquí llega formDinamic
+  fields: any[] = [];              // 👈 campos reales
   form!: FormGroup;
 
   constructor(private fb: FormBuilder) {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
+    if (!this.pageFields?.length) return;
+
+    // 🔹 extraemos SOLO los campos
+    this.fields = this.pageFields[0].pages[0];
+
     const group: Record<string, any> = {};
 
-    this.pageFields.forEach(field => {
+    this.fields.forEach(field => {
       group[field.var_answer] = field.name?.includes('*')
         ? ['', Validators.required]
         : [''];
     });
 
     this.form = this.fb.group(group);
+
+    console.log('FORM:', this.form.value);
   }
 }

@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { StepsModule } from 'primeng/steps';
-import { PdfPreview } from '../pdf-preview/pdf-preview';
-import { AppStepper } from "../../../../shared/components/app-stepper/app-stepper";
-import { DocumentService } from '../../services/document.service';
+import { CardModule } from 'primeng/card';
+
+import { AppStepper } from '../../../../shared/components/app-stepper/app-stepper';
+import { UploadDocuments } from '../../../../shared/components/upload-documents/upload-documents';
+import { PdfPreviewList } from '../../../../shared/components/pdf-preview-list/pdf-preview-list';
+import { ToolbarModule } from 'primeng/toolbar';
+
+import { DocumentService, SessionDocument } from '../../services/document.service';
 import { DynamicForm } from "../../../../shared/components/dynamic-form/dynamic-form";
-import { Card } from "primeng/card";
 
 @Component({
   selector: 'app-sing-entry',
@@ -17,106 +19,115 @@ import { Card } from "primeng/card";
     CommonModule,
     StepsModule,
     ButtonModule,
-    PdfPreview,
     AppStepper,
-    DynamicForm
+    UploadDocuments,
+    PdfPreviewList,
+    ToolbarModule,
+    DynamicForm,
+    CardModule
   ],
   templateUrl: './sing-entry.html',
   styleUrl: './sing-entry.css',
 })
 export class SingEntry implements OnInit {
 
+  // Servicios
   private documentService = inject(DocumentService);
 
-  steps: MenuItem[] = [
-    { label: 'Datos', icon: 'pi pi-user' },
-    { label: 'Documento', icon: 'pi pi-file' },
-    { label: 'Confirmar', icon: 'pi pi-check' }
-  ];
-
-
-  formJson = [
+  formDinamic = [
     {
-      name: 'Formulario de prueba',
-      role: 'acquirer',
-      pages: [
+      "name": "Completar la siguiente información requerida. Los campos marcados con ( * ) son obligatorios",
+      "role": "acquirer",
+      "pages": [
         [
           {
-            id: 1,
-            name: 'Entidad Financiera *',
-            type: 'Select',
-            items: ['Banco Pichincha', 'Banco Guayaquil', 'Produbanco'],
-            var_answer: 'entity_financial'
+            "id": 1,
+            "name": "Nombre *",
+            "type": "Text",
+            "class": "",
+            "items": [],
+            "style": "",
+            "weight": [],
+            "attributes": [],
+            "var_answer": "var_first_name",
+            "description": ""
           },
           {
-            id: 2,
-            name: 'Nombre del Titular *',
-            type: 'Text',
-            items: [],
-            var_answer: 'account_holder'
+            "id": 2,
+            "name": "Apellido *",
+            "type": "Text",
+            "class": "",
+            "items": [],
+            "style": "",
+            "weight": [],
+            "attributes": [],
+            "var_answer": "var_last_name",
+            "description": ""
           },
           {
-            id: 3,
-            name: 'Tipo de Cuenta *',
-            type: 'Radio',
-            items: ['Cuenta Corriente', 'Cuenta de Ahorros'],
-            var_answer: 'account_type'
+            "id": 3,
+            "name": "Tipo de Identificación *",
+            "type": "Radio",
+            "class": "",
+            "items": ["Cédula", "RUC"],
+            "style": "",
+            "weight": [0, 1],
+            "attributes": [],
+            "var_answer": "rad_identification_type",
+            "description": ""
           },
           {
-            id: 4,
-            name: 'Número de Cuenta *',
-            type: 'Text',
-            items: [],
-            var_answer: 'account_number'
+            "id": 4,
+            "name": "Número de Identificación (Cédula o RUC) *",
+            "type": "Text",
+            "class": "",
+            "items": [],
+            "style": "",
+            "weight": [],
+            "attributes": [],
+            "var_answer": "var_identification_number",
+            "description": ""
           }
         ]
-      ]
+      ],
+      "description": ""
     }
+  ]
+
+
+  // Stepper
+  steps = [
+    { label: 'Información', icon: 'pi pi-user' },
+    { label: 'Subir documentos', icon: 'pi pi-upload' },
+    { label: 'Visualizar documentos', icon: 'pi pi-file-pdf' }
   ];
-
-  pdfUrl = 'https://doc.firmasegura.work:8280/ipfs/QmT7zQdnKphd8hBPXsKaRGyoM7qZXB7Rg7TyBqSmWQSRLs';
-
-  pdfSrc!: string;
 
   activeStep = 0;
 
-  accountOk = false;
-  profileOk = false;
 
-  ngOnInit() {
-    this.documentService.loadPdf(this.pdfUrl).subscribe({
-      next: (blob) => {
-        const fileURL = URL.createObjectURL(blob);
-        console.log('🟢 PDF listo:', fileURL);
-        this.pdfSrc = fileURL;
-      },
-      error: err => console.error('❌ Error PDF', err)
-    });
+  // Data
+  pdfDocs: SessionDocument[] = [];
+
+  ngOnInit(): void {
+    // Cargar documentos desde sesión
+    this.pdfDocs = this.documentService.getFromSession();
   }
 
-
-  goToStep(step: number) {
-    // Siempre permitir retroceder
+  // Control de navegación entre pasos
+  goToStep(step: number): void {
     if (step < this.activeStep) {
       this.activeStep = step;
       return;
     }
 
-    // Validar solo al avanzar
     if (!this.canAdvance()) return;
 
     this.activeStep = step;
   }
 
-
- canAdvance(): boolean {
-  return true;
-}
-
-
-  get pageFields() {
-    return this.formJson[0].pages[0];
+  // Validaciones al avanzar
+  canAdvance(): boolean {
+    return true;
   }
 
 }
-

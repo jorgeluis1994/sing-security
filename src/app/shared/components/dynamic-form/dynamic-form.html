@@ -1,6 +1,10 @@
-<form [formGroup]="form" class="p-fluid">
+<form *ngIf="form" [formGroup]="form" class="p-fluid">
 
-  <div *ngFor="let field of pageFields" class="mb-4">
+  <!-- <pre class="mb-4 p-3 bg-gray-100 border-round text-sm">
+{{ form.value | json }}
+  </pre> -->
+
+  <div *ngFor="let field of fields" class="mb-4">
 
     <!-- LABEL -->
     <label class="font-medium mb-2 block">
@@ -26,17 +30,16 @@
 
     <!-- RADIO -->
     <div *ngIf="field.type === 'Radio'" class="flex flex-column gap-2">
-      <p-radioButton
-        *ngFor="let item of field.items"
-        [inputId]="field.var_answer + item"
-        [value]="item"
-        [formControlName]="field.var_answer">
-      </p-radioButton>
-      <label
-        *ngFor="let item of field.items"
-        [for]="field.var_answer + item">
-        {{ item }}
-      </label>
+      <div *ngFor="let item of field.items" class="flex align-items-center gap-2">
+        <p-radioButton
+          [inputId]="field.var_answer + item"
+          [value]="item"
+          [formControlName]="field.var_answer">
+        </p-radioButton>
+        <label [for]="field.var_answer + item">
+          {{ item }}
+        </label>
+      </div>
     </div>
 
     <!-- ERROR -->

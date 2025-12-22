@@ -8,16 +8,29 @@ import MyPreset from '../../Theme/my-preset';
 
 export const CORE_PROVIDERS = [
   MessageService,
-  
-  providePrimeNG({
-  theme: {
-        preset: Aura
-      }
 
-  }),
+  providePrimeNG({
+    ripple: true,
+    theme: {
+      preset: Aura,
+      options: {
+        darkModeSelector: '.dark-theme',
+        cssLayer: true,
+        inputStyle: 'outlined',
+        scale: 14,
+        fontFamily: 'Inter, system-ui, sans-serif',
+        transitionDuration: '0.2s',
+        overlayOptions: {
+          appendTo: 'body',
+          autoZIndex: true
+        }
+      }
+    }
+  })
+  ,
   provideHttpClient(
     withInterceptors([
-    AuthInterceptor,
-    ErrorInterceptor
-  ])),
+      AuthInterceptor,
+      ErrorInterceptor
+    ])),
 ];

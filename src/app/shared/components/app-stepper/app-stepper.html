@@ -1,7 +1,16 @@
-<p-steps
-      [model]="steps"
-      [activeIndex]="activeIndex"
-      [readonly]="readonly"
-      (activeIndexChange)="stepChange.emit($event)">
-</p-steps>
+<p-stepper [(value)]="activeIndex" class="w-full">
 
+  <p-step-list>
+    @for (step of steps; track step; let i = $index) {
+      <p-step [value]="i" class="flex gap-2 items-center">
+
+        @if (step.icon) {
+          <i [class]="step.icon"></i>
+        }
+
+        <!-- <span>{{ step.label }}</span> -->
+      </p-step>
+    }
+  </p-step-list>
+
+</p-stepper>

@@ -1,44 +1,68 @@
-<div class="container">
+<!-- ===================== -->
+<!-- 🧭 STEPPER PRINCIPAL -->
+<!-- ===================== -->
+<div class="row p-4">
+    <div class="col-12">
+        <app-app-stepper [steps]="steps" [activeIndex]="activeStep" (stepChange)="goToStep($event)">
+        </app-app-stepper>
+    </div>
+</div>
+<div class="container-fluid">
 
-    <!-- STEPPER -->
-    <div class="row py-3">
+
+    <!-- ===================== -->
+    <!-- 📦 CONTENIDO DEL PASO -->
+    <!-- ===================== -->
+    <div class="row p-3">
         <div class="col-12">
-            <app-app-stepper [steps]="steps" [activeIndex]="activeStep" (stepChange)="goToStep($event)">
-            </app-app-stepper>
-        </div>
-    </div>
 
-    <!-- CONTENIDO DEL PASO -->
-    <div class="row mt-4">
-        <div class="col-12">
+            <p-card class="step-card">
 
-            @if (activeStep === 0 ) {
-            <app-dynamic-form [pageFields]="pageFields" ></app-dynamic-form>
-            }
+                <!-- Paso 0 -->
+                @if (activeStep === 0) {
 
-            @if (activeStep === 1 && pdfSrc) {
-            <app-pdf-preview [pdfSrc]="pdfSrc"></app-pdf-preview>
-            }
+                <app-dynamic-form [pageFields]="formDinamic">
+                </app-dynamic-form>
+                }
 
+                <!-- Paso 1 -->
+                @if (activeStep === 1) {
 
+                <app-upload-documents>
+                </app-upload-documents>
+                }
 
-        </div>
-    </div>
+                <!-- Paso 2 -->
+                @if (activeStep === 2 && pdfDocs.length > 0) {
 
-    <!-- BOTONES -->
-    <div class="row mt-4 py-5">
-        <div class="col-12 d-flex justify-content-between">
+                <app-pdf-preview-list [documents]="pdfDocs">
+                </app-pdf-preview-list>
+                }
 
-            <button pButton label="Atrás" icon="pi pi-arrow-left" (click)="goToStep(activeStep - 1)"
-                [disabled]="activeStep === 0">
-            </button>
-
-            <button pButton label="Siguiente" icon="pi pi-arrow-right" iconPos="right"
-                (click)="goToStep(activeStep + 1)" [disabled]="!canAdvance()">
-            </button>
+            </p-card>
 
         </div>
     </div>
+
+
+
 
 
 </div>
+
+<!-- ===================== -->
+<!-- ⬅️➡️ BOTONES DE NAVEGACIÓN -->
+<!-- ===================== -->
+<p-toolbar class="p-4">
+    <div class="p-toolbar-group-start">
+        <button pButton label="Atrás" icon="pi pi-arrow-left" class="p-button-text" (click)="goToStep(activeStep - 1)"
+            [disabled]="activeStep === 0">
+        </button>
+    </div>
+
+    <div class="p-toolbar-group-end">
+        <button pButton label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (click)="goToStep(activeStep + 1)"
+            [disabled]="!canAdvance()">
+        </button>
+    </div>
+</p-toolbar>

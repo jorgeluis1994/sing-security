@@ -1,0 +1,29 @@
+<p-card header="Subir documentos">
+  <p-fileUpload
+    mode="basic"
+    name="documents"
+    accept="application/pdf"
+    chooseLabel="Seleccionar PDF"
+    [multiple]="true"
+    [auto]="false"
+    (onSelect)="onSelect($event)">
+  </p-fileUpload>
+
+  <div class="mt-4" *ngIf="documents.length > 0">
+    <h5>Documentos cargados</h5>
+
+    <ul class="list-group">
+      <li *ngFor="let doc of documents; let i = index"
+          class="list-group-item d-flex justify-content-between align-items-center">
+        {{ doc.name }}
+        <span>
+          <p-tag value="PDF" severity="success"></p-tag>
+          <button pButton icon="pi pi-trash"
+                  class="p-button-text p-button-danger"
+                  (click)="removeFile(i)">
+          </button>
+        </span>
+      </li>
+    </ul>
+  </div>
+</p-card>

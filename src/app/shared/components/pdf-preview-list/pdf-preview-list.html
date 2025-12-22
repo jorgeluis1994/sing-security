@@ -1,0 +1,42 @@
+@if (!documents || documents.length === 0) {
+
+  <p-card>
+    <div class="text-center p-4 text-muted">
+      <i class="pi pi-file-pdf" style="font-size: 2rem"></i>
+      <p class="mt-2 mb-0">No existen documentos para mostrar</p>
+    </div>
+  </p-card>
+
+} @else {
+
+  <div class="container-fluid">
+    <div class="row g-3">
+
+      <!-- Sidebar documentos -->
+      <div class="col-12 col-md-3">
+        <p-card header="Documentos" class="h-100">
+
+          <p-listbox
+            [options]="documents"
+            [(ngModel)]="selectedDoc"
+            optionLabel="name"
+            class="w-100">
+          </p-listbox>
+
+        </p-card>
+      </div>
+
+      <!-- Preview PDF -->
+      <div class="col-12 col-md-9">
+        <p-card header="{{ selectedDoc.name }}" class="h-100">
+
+          <app-pdf-preview
+            [pdfSrc]="selectedDoc.dataUrl">
+          </app-pdf-preview>
+
+        </p-card>
+      </div>
+
+    </div>
+  </div>
+}
