@@ -32,7 +32,7 @@ export class SignTokenResolver implements Resolve<boolean | RedirectCommand> {
     // 🔄 MOSTRAR LOADING
     this.loading.show('Validando token...');
 
-    debugger
+  
 
     return this.tokenService.validateToken(token).pipe(
       map((resp: any) => {
