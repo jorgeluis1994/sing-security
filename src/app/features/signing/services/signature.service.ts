@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { SignDocumentPayload } from '../models/signature.model';
+import { SignDocumentPayload, SignGraphologicalPayload } from '../models/signature.model';
 
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +10,7 @@ export class SignatureService {
   private readonly baseUrl = environment.api.baseUrl;
   private readonly signUrl = environment.signature.endpoints.sign;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   signDocument(payload: SignDocumentPayload) {
     const formData = this.buildFormData(payload);
@@ -20,6 +20,37 @@ export class SignatureService {
       formData
     );
   }
+
+  signGraphological(payload: SignGraphologicalPayload) {
+    const formData = new FormData();
+
+    // 📄 PDF
+    const pdfBlob = this.dataUrlToBlob(payload.pdf.dataUrl);
+    formData.append('pdfFile', pdfBlob, payload.pdf.name);
+
+    // ✍️ Nombre
+    formData.append('fullName', payload.fullName);
+
+    // 📍 Posición de la firma (OBLIGATORIO)
+    formData.append('page', payload.position.page.toString());
+    formData.append('x', payload.position.x.toString());
+    formData.append('y', payload.position.y.toString());
+
+    // 📐 Opcionales
+    if (payload.position.width !== undefined) {
+      formData.append('width', payload.position.width.toString());
+    }
+
+    if (payload.position.height !== undefined) {
+      formData.append('height', payload.position.height.toString());
+    }
+
+    return this.http.post(
+      `${this.baseUrl}${environment.signature.endpoints.signGraphological}`,
+      formData
+    );
+  }
+
 
   // =========================
   // 🔒 MÉTODO PRIVADO

@@ -37,7 +37,8 @@ export const environment = {
   /** 🖊️ FIRMA DIGITAL */
   signature: {
     endpoints: {
-      sign: '/signature/sign',   // 👈 NUEVO ENDPOINT
+      sign: '/signature/sign',
+      signGraphological: '/signature/sign-graphological'
     },
   },
 

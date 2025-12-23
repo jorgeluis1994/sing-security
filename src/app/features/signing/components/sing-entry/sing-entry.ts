@@ -15,7 +15,7 @@ import { SingPdf } from '../../../../shared/components/sing-pdf/sing-pdf';
 import { DocumentService } from '../../services/document.service';
 import { SigningFacade } from '../../facades/signing.facade';
 
-import { SignatureMark } from '../../../../shared/components/pdf-preview-list/pdf-preview/pdf-preview';
+import { SignatureMark } from '../../../../shared/components/pdf-preview/pdf-preview';
 import {
   SIGNING_FORM_CONFIG,
   SIGNING_STEPS
@@ -30,7 +30,6 @@ import {
     ButtonModule,
     CardModule,
     ToolbarModule,
-
     AppStepper,
     UploadDocuments,
     PdfPreviewList,
@@ -46,6 +45,7 @@ export class SingEntry implements OnInit {
   // ================= DEPENDENCIES =================
   private readonly facade = inject(SigningFacade);
   private readonly documentService = inject(DocumentService);
+  fullName = 'Jorge Luis';
 
   // ================= UI DATA =================
   steps = SIGNING_STEPS;
@@ -92,6 +92,24 @@ export class SingEntry implements OnInit {
       },
       error: err => {
         console.error('❌ Error firmando', err);
+      },
+    });
+  }
+
+  signGraphological(): void {
+    if (!this.fullName) {
+      alert('Ingrese su nombre completo');
+      return;
+    }
+
+    this.facade.signGraphological(this.fullName).subscribe({
+      next: res => {
+        console.log('✍️ Documento firmado (grafológico)', res);
+        // toast
+        // avanzar paso
+      },
+      error: err => {
+        console.error('❌ Error firmando (grafológico)', err);
       },
     });
   }

@@ -1,0 +1,35 @@
+<p-card class="pdf-container">
+
+  <!-- ===== Toolbar ===== -->
+  <p-toolbar class="mb-2">
+    <div class="p-toolbar-group-start">
+      <strong>Vista previa del documento</strong>
+    </div>
+
+    <div class="p-toolbar-group-end">
+      <p-toggleswitch
+        [(ngModel)]="signatureMode"
+        (ngModelChange)="onToggleSignature($event)">
+      </p-toggleswitch>
+      <span class="ml-2">Modo firma</span>
+    </div>
+  </p-toolbar>
+
+  <!-- ===== PDF ===== -->
+  <div class="pdf-wrapper" (click)="onPdfClick($event)">
+
+    <ngx-extended-pdf-viewer
+      [src]="pdfSrc"
+      height="80vh"
+      useBrowserLocale="true"
+      (pdfLoaded)="onPdfLoaded()">
+    </ngx-extended-pdf-viewer>
+
+  </div>
+
+  <!-- ===== DEBUG ===== -->
+  <pre class="debug-box" *ngIf="signatureMarks.length">
+{{ signatureMarks | json }}
+  </pre>
+
+</p-card>

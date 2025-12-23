@@ -1,20 +1,27 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, finalize } from 'rxjs';
 import { SessionDocument } from '../services/document.service';
-import { SignatureMark } from '../../../shared/components/pdf-preview-list/pdf-preview/pdf-preview';
+import { SignatureMark } from '../../../shared/components/pdf-preview/pdf-preview';
 import { SignatureService } from '../services/signature.service';
-import { SignDocumentPayload } from '../models/signature.model';
+import { SignDocumentPayload, SignGraphologicalPayload } from '../models/signature.model';
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Injectable({ providedIn: 'root' })
 export class SigningFacade {
+
+  private readonly loading = inject(LoadingService);
 
   private readonly signatureService = inject(SignatureService);
 
   // ================= STATE (PRIVATE) =================
   private readonly activeStepSubject = new BehaviorSubject<number>(0);
+
   private readonly documentsSubject = new BehaviorSubject<SessionDocument[]>([]);
+
   private readonly htmlSubject = new BehaviorSubject<string | null>(null);
+
   private readonly signaturesSubject = new BehaviorSubject<SignatureMark[]>([]);
+
   private readonly certificateSubject = new BehaviorSubject<{
     file: File;
     password: string;
@@ -86,8 +93,43 @@ export class SigningFacade {
       positions,
     };
 
-    return this.signatureService.signDocument(payload);
+    this.loading.show('Firmando documento digitalmente...');
+
+    return this.signatureService.signDocument(payload).pipe(
+      finalize(() => this.loading.hide())
+    );
   }
+
+
+
+  // ================= ACTION =================
+  signGraphological(fullName: string) {
+    const pdf = this.documentsSubject.value[0];
+    const positions = this.signaturesSubject.value;
+
+    if (!pdf || !fullName || !positions.length) {
+      throw new Error('❌ Datos incompletos para firma grafológica');
+    }
+
+    const payload: SignGraphologicalPayload = {
+      pdf: {
+        name: pdf.name,
+        dataUrl: pdf.dataUrl,
+      },
+      fullName,
+      position: positions[0], // solo una firma grafológica
+    };
+
+    this.loading.show('Firmando documento grafológicamente...');
+
+    return this.signatureService.signGraphological(payload).pipe(
+      finalize(() => this.loading.hide())
+    );
+  }
+
+
+
+
 }
 
 

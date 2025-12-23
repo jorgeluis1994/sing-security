@@ -1,0 +1,39 @@
+/* romper encapsulación del visor */
+:host ::ng-deep .page {
+  position: relative;
+}
+
+/* marcador visible */
+:host ::ng-deep .signature-marker {
+  position: absolute;
+  width: 150px;
+  height: 60px;
+  border: 2px dashed #2563eb;
+  background: rgba(37, 99, 235, 0.15);
+  z-index: 9999;
+  box-sizing: border-box;
+}
+
+/* texto */
+:host ::ng-deep .signature-label {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  font-size: 11px;
+  color: #1e40af;
+}
+
+/* botón eliminar */
+:host ::ng-deep .signature-remove {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: #dc2626;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}

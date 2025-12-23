@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ListboxModule } from 'primeng/listbox';
 
-import { PdfPreview, SignatureMark } from './pdf-preview/pdf-preview';
+import { PdfPreview, SignatureMark } from '../pdf-preview/pdf-preview';
 import { SessionDocument } from '../../../features/signing/services/document.service';
 import { FormsModule } from '@angular/forms';
 
