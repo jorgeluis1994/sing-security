@@ -47,7 +47,7 @@ export class Login implements OnInit {
   ngOnInit(): void {
   }
 
-  submit() {
+  login() {
     if (this.formLogin.invalid) {
       this.toast.add({
         severity: 'warn',

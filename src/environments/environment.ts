@@ -34,6 +34,13 @@ export const environment = {
     },
   },
 
+  /** 🖊️ FIRMA DIGITAL */
+  signature: {
+    endpoints: {
+      sign: '/signature/sign',   // 👈 NUEVO ENDPOINT
+    },
+  },
+
   ui: {
     stepper: {
       linear: true,

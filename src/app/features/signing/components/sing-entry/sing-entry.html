@@ -1,80 +1,109 @@
+@let activeStep = (activeStep$ | async);
+@let pdfDocs = (documents$ | async) ?? [];
+
+
 <!-- ===================== -->
 <!-- 🧭 STEPPER PRINCIPAL -->
 <!-- ===================== -->
-<div class="row p-4">
-    <div class="col-12">
-        <app-app-stepper [steps]="steps" [activeIndex]="activeStep" (stepChange)="goToStep($event)">
-        </app-app-stepper>
-    </div>
+<div class="container py-4">
+  <p-card class="shadow-1 border-round-xl">
+    <app-app-stepper
+      [steps]="steps"
+      [activeIndex]="activeStep ?? 0"
+      (stepChange)="goToStep($event)">
+    </app-app-stepper>
+  </p-card>
 </div>
+
+<!-- ===================== -->
+<!-- 📦 CONTENIDO DEL PASO -->
+<!-- ===================== -->
 <div class="container-fluid">
+  <div class="row justify-content-center">
 
+    <!-- Paso 0 -->
+    @if (activeStep === 0) {
+      <div class="step-content">
+        <app-dynamic-form
+          [formConfig]="currentForm"
+          [pageIndex]="0">
+        </app-dynamic-form>
+      </div>
+    }
 
-    <!-- ===================== -->
-    <!-- 📦 CONTENIDO DEL PASO -->
-    <!-- ===================== -->
-    <div class="row p-3">
-        <div class="col-12">
+    <!-- Paso 1 -->
+    @if (activeStep === 1) {
+      <div class="step-content">
+        <app-upload-documents></app-upload-documents>
+      </div>
+    }
 
-            <p-card class="step-card">
+    <!-- Paso 2 -->
+    @if (activeStep === 2 && pdfDocs?.length) {
+      <div class="step-content">
+        <app-pdf-preview-list
+          [documents]="pdfDocs"
+          (signaturePosition)="onSignatureCaptured($event)">
+        </app-pdf-preview-list>
+      </div>
+    }
 
-                <!-- Paso 0 -->
-                @if (activeStep === 0) {
+    <!-- Paso 3 -->
+    @if (activeStep === 3) {
+      <div class="step-content">
+        <app-validate-pdf></app-validate-pdf>
+      </div>
+    }
 
-                <app-dynamic-form [formConfig]="currentForm" [pageIndex]="currentPageIndex">
-                </app-dynamic-form>
+    <!-- Paso 4 -->
+    @if (activeStep === 4) {
+      <div class="step-content">
+        <app-sing-pdf
+          (htmlChange)="onHtmlChange($event)">
+        </app-sing-pdf>
+      </div>
+    }
 
-                }
-
-                <!-- Paso 1 -->
-                @if (activeStep === 1) {
-
-                <app-upload-documents>
-                </app-upload-documents>
-                }
-
-                <!-- Paso 2 -->
-                @if (activeStep === 2 && pdfDocs.length > 0) {
-
-                <app-pdf-preview-list [documents]="pdfDocs">
-                </app-pdf-preview-list>
-                }
-
-                <!-- paso 3  -->
-
-                @if (activeStep===3) {
-                 <app-validate-pdf ></app-validate-pdf>
-                }
-
-                @if (activeStep===4) {
-                    <app-sing-pdf></app-sing-pdf>
-
-                }
-
-            </p-card>
-
-        </div>
-    </div>
-
-
-
-
-
+  </div>
 </div>
 
 <!-- ===================== -->
 <!-- ⬅️➡️ BOTONES DE NAVEGACIÓN -->
 <!-- ===================== -->
-<p-toolbar class="p-4">
-    <div class="p-toolbar-group-start">
-        <button pButton label="Atrás" icon="pi pi-arrow-left" class="p-button-text" (click)="goToStep(activeStep - 1)"
-            [disabled]="activeStep === 0">
-        </button>
-    </div>
+<p-toolbar class="step-toolbar shadow-1 border-round-xl p-3">
 
-    <div class="p-toolbar-group-end">
-        <button pButton label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (click)="goToStep(activeStep + 1)"
-            [disabled]="!canAdvance()">
-        </button>
-    </div>
+  <div class="p-toolbar-group-start">
+    <button
+      pButton
+      label="Atrás"
+      icon="pi pi-arrow-left"
+      class="p-button-text p-button-secondary"
+      (click)="goToStep((activeStep ?? 0) - 1)"
+      [disabled]="activeStep === 0">
+    </button>
+  </div>
+
+  <div class="p-toolbar-group-end">
+    <button
+      pButton
+      label="Siguiente"
+      icon="pi pi-arrow-right"
+      iconPos="right"
+      class="p-button-raised p-button-primary"
+      (click)="goToStep((activeStep ?? 0) + 1)"
+      [disabled]="!canAdvance()">
+    </button>
+  </div>
+  <div class="row">
+    <button
+        pButton
+        label="Firmar documento"
+        icon="pi pi-file-signature"
+        class="p-button-raised p-button-success"
+        (click)="signDocument()"
+        [disabled]="!(canAdvance())">
+      </button>
+    
+  </div>
+
 </p-toolbar>

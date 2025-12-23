@@ -1,42 +1,73 @@
 @if (!documents || documents.length === 0) {
 
-  <p-card>
-    <div class="text-center p-4 text-muted">
-      <i class="pi pi-file-pdf" style="font-size: 2rem"></i>
-      <p class="mt-2 mb-0">No existen documentos para mostrar</p>
-    </div>
-  </p-card>
+<p-card>
+  <div class="text-center p-4 text-muted">
+    <i class="pi pi-file-pdf" style="font-size: 2rem"></i>
+    <p class="mt-2 mb-0">No existen documentos para mostrar</p>
+  </div>
+</p-card>
 
 } @else {
 
-  <div class="container-fluid">
-    <div class="row g-3">
+<div class="container-fluid">
+  <div class="row g-3">
 
-      <!-- Sidebar documentos -->
-      <div class="col-12 col-md-3">
-        <p-card header="Documentos" class="h-100">
+    <!-- Sidebar documentos -->
+    <div class="col-12 col-md-3">
+      <p-card header="Documentos" class="h-100">
 
-          <p-listbox
-            [options]="documents"
-            [(ngModel)]="selectedDoc"
-            optionLabel="name"
-            class="w-100">
-          </p-listbox>
+        <p-table [value]="documents" selectionMode="single" [(selection)]="selectedDoc" dataKey="name"
+          class="p-datatable-sm w-100" [scrollable]="true" scrollHeight="60vh">
 
-        </p-card>
-      </div>
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Documento</th>
+              <th class="text-center" style="width: 7rem">Estado</th>
+              <th class="text-center" style="width: 6rem">Acción</th>
+            </tr>
+          </ng-template>
 
-      <!-- Preview PDF -->
-      <div class="col-12 col-md-9">
-        <p-card header="{{ selectedDoc.name }}" class="h-100">
+          <ng-template pTemplate="body" let-doc>
+            <tr [pSelectableRow]="doc">
 
-          <app-pdf-preview
-            [pdfSrc]="selectedDoc.dataUrl">
-          </app-pdf-preview>
+              <!-- Nombre -->
+              <td>
+                <i class="pi pi-file-pdf text-danger me-2"></i>
+                {{ doc.name }}
+              </td>
 
-        </p-card>
-      </div>
+              <!-- Estado (visual) -->
+              <td class="text-center">
+                <p-tag severity="warn" value="PENDIENTE"></p-tag>
+              </td>
 
+              <!-- Acción -->
+              <td class="text-center">
+                <button pButton icon="pi pi-check" class="p-button-sm p-button-outlined p-button-success"
+                  pTooltip="Validar documento">
+                </button>
+              </td>
+
+            </tr>
+          </ng-template>
+
+        </p-table>
+
+
+
+      </p-card>
     </div>
+
+    <!-- Preview PDF -->
+    <div class="col-12 col-md-9">
+   
+
+        <app-pdf-preview [pdfSrc]="selectedDoc.dataUrl"(signaturePosition)="onSignatureCaptured($event)">
+        </app-pdf-preview>
+
+  
+    </div>
+
   </div>
+</div>
 }

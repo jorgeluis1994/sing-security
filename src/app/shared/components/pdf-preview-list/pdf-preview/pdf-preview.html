@@ -1,0 +1,40 @@
+<p-card class="pdf-container">
+
+  <!-- ================= Toolbar ================= -->
+  <p-toolbar class="mb-2">
+    <div class="p-toolbar-group-start">
+      <span class="font-semibold">
+        Vista previa del documento
+      </span>
+    </div>
+
+    <div class="p-toolbar-group-end">
+      <p-toggleswitch [(ngModel)]="signatureMode" (ngModelChange)="onToggleSignature($event)">
+      </p-toggleswitch>
+    </div>
+  </p-toolbar>
+
+
+  <!-- ================= PDF ================= -->
+  <div class="pdf-wrapper" (scroll)="onScroll($event)" (click)="onPdfClick($event)">
+
+    <ngx-extended-pdf-viewer [src]="pdfSrc" height="80vh" useBrowserLocale="true" (pdfLoaded)="onPdfLoaded()">
+    </ngx-extended-pdf-viewer>
+
+    <!-- Pins -->
+    @for (mark of signatureMarks; track $index) {
+    <div class="signature-pin" [attr.data-page]="mark.page" [style.left.px]="mark.x" [style.top.px]="mark.y"
+      [style.transform]="'translate(-50%, -100%)'">
+
+      <i class="pi pi-map-marker"></i>
+
+      <button class="remove-pin" (click)="removeSignature($index); $event.stopPropagation()">
+        ✕
+      </button>
+    </div>
+    }
+
+  </div>
+
+
+</p-card>
