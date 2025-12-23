@@ -19,14 +19,12 @@
             <p-card class="step-card">
 
                 <!-- Paso 0 -->
-                <!-- Paso 0 -->
                 @if (activeStep === 0) {
 
                 <app-dynamic-form [formConfig]="currentForm" [pageIndex]="currentPageIndex">
                 </app-dynamic-form>
 
                 }
-
 
                 <!-- Paso 1 -->
                 @if (activeStep === 1) {
@@ -40,6 +38,17 @@
 
                 <app-pdf-preview-list [documents]="pdfDocs">
                 </app-pdf-preview-list>
+                }
+
+                <!-- paso 3  -->
+
+                @if (activeStep===3) {
+                 <app-validate-pdf ></app-validate-pdf>
+                }
+
+                @if (activeStep===4) {
+                    <app-sing-pdf></app-sing-pdf>
+
                 }
 
             </p-card>

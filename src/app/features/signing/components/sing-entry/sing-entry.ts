@@ -12,6 +12,8 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { DocumentService, SessionDocument } from '../../services/document.service';
 import { DynamicForm } from "../../../../shared/components/dynamic-form/dynamic-form";
 import { DynamicFormConfig } from '../../../../shared/models/forms-dynamic.entity';
+import { ValidatePdf } from "../../../../shared/components/validate-pdf/validate-pdf";
+import { SingPdf } from "../../../../shared/components/sing-pdf/sing-pdf";
 
 @Component({
   selector: 'app-sing-entry',
@@ -25,7 +27,9 @@ import { DynamicFormConfig } from '../../../../shared/models/forms-dynamic.entit
     PdfPreviewList,
     ToolbarModule,
     DynamicForm,
-    CardModule
+    CardModule,
+    ValidatePdf,
+    SingPdf
   ],
   templateUrl: './sing-entry.html',
   styleUrl: './sing-entry.css',
@@ -67,10 +71,15 @@ export class SingEntry implements OnInit {
   currentPageIndex = 0;
 
   steps = [
-    { label: 'Información', icon: 'pi pi-user' },
-    { label: 'Subir documentos', icon: 'pi pi-upload' },
-    { label: 'Visualizar documentos', icon: 'pi pi-file-pdf' }
+    { label: 'Información', icon: 'pi pi-briefcase' },
+    { label: 'Subir documentos', icon: 'pi pi-folder-open' },
+    { label: 'Visualizar documentos', icon: 'pi pi-file-pdf' },
+    { label: 'Validación documentos', icon: 'pi pi-check-square' },
+    { label: 'Firma de inscripción', icon: 'pi pi-file-signature' }
   ];
+
+
+
 
   activeStep = 0;
   pdfDocs: SessionDocument[] = [];
@@ -78,8 +87,8 @@ export class SingEntry implements OnInit {
   ngOnInit(): void {
     this.currentForm = this.formDinamic[0];
     this.documentService.docs$.subscribe(docs => {
-    this.pdfDocs = docs;
-  });
+      this.pdfDocs = docs;
+    });
   }
 
   goToStep(step: number): void {
