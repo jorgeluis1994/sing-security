@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Router } from '@angular/router';
@@ -8,6 +8,10 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { LoadingService } from '../../../core/services/loading.service';
+import { finalize } from 'rxjs';
+
 
 
 @Component({
@@ -19,6 +23,8 @@ import { MessageService } from 'primeng/api';
     InputTextModule,
     PasswordModule,
     ButtonModule,
+    FloatLabelModule
+
   ],
   templateUrl: './login.html',
   styleUrl: './login.css',
@@ -30,6 +36,7 @@ export class Login implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
   private toast = inject(MessageService);
+  private loading = inject(LoadingService);
 
 
   formLogin = this.fb.group({
@@ -50,16 +57,23 @@ export class Login implements OnInit {
       return;
     }
 
-    this.auth.login(this.formLogin.value as any).subscribe({
-      next: () => this.router.navigate(['/']),
-      error: () =>
-        this.toast.add({
-          severity: 'error',
-          summary: 'Credenciales incorrectas',
-          detail: 'Usuario o contraseña inválidos',
-        }),
-    });
+    this.loading.show('Validando credenciales...');
+
+    this.auth.login(this.formLogin.value as any)
+      .pipe(
+        finalize(() => this.loading.hide())
+      )
+      .subscribe({
+        next: () => this.router.navigate(['/']),
+        error: () =>
+          this.toast.add({
+            severity: 'error',
+            summary: 'Credenciales incorrectas',
+            detail: 'Usuario o contraseña inválidos',
+          }),
+      });
   }
+
 
 
 }

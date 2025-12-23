@@ -18,11 +18,11 @@ export const ErrorInterceptor: HttpInterceptorFn = (req, next) => {
         authService.logout();
         router.navigate(['/auth/login']);
 
-        toast.add({
-          severity: 'warn',
-          summary: 'Sesión expirada',
-          detail: 'Vuelve a iniciar sesión',
-        });
+        // toast.add({
+        //   severity: 'warn',
+        //   summary: 'Sesión expirada',
+        //   detail: 'Vuelve a iniciar sesión',
+        // });
       }
 
       // ❌ Otros errores
