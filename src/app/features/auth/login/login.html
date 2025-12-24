@@ -1,58 +1,58 @@
-<div class="container-fluid vh-100">
-  <div class="row justify-content-center align-items-center h-100">
-
-    <div class="col-12 col-sm-8 col-md-5 col-lg-4">
-      <p-card class="auth-card">
-
-        <!-- Header -->
-        <div class="text-center mb-4">
-          <h2 class="auth-title">Login</h2>
-        </div>
+<div class="sceen-login">
 
 
+  <!-- =====================
+       LADO DERECHO
+  ====================== -->
+  <div class="box-login-right">
 
-        <form [formGroup]="formLogin">
+    <div class="box-froms-login">
 
-          <div class="row justify-content-center">
+      <div class="login-card">
 
-            <div class="col-12 col-md-4">
+        <h2>Iniciar sesión</h2>
 
-              <p-floatlabel class="mb-4" style="width:100%">
-                <input type="text" pInputText formControlName="user" style="width:100%" />
-                <label>Usuario</label>
-              </p-floatlabel>
+        <form [formGroup]="formLogin" (ngSubmit)="login()">
 
-              <p-floatlabel style="width:100%">
-                <input type="password" pInputText formControlName="password" style="width:100%" />
-                <label>Contraseña</label>
-              </p-floatlabel>
+          <input
+            pInputText
+            formControlName="user"
+            placeholder="Usuario"
+            fluid
+          />
 
-            </div>
+          <input
+            pInputText
+            type="password"
+            formControlName="password"
+            placeholder="Contraseña"
+            fluid
+          />
 
-          </div>
-
-
-
-          <div class="row py-3">
-            <div class="col-12 d-flex justify-content-center">
-              <p-button label="Iniciar sesión" icon="pi pi-sign-in" severity="primary" (onClick)="login()">
-              </p-button>
-            </div>
-          </div>
-
-
+          <p-button
+            label="Ingresar"
+            severity="success"
+            type="submit"
+            fluid>
+          </p-button>
 
         </form>
 
+      </div>
 
-
-
-        <!-- <pre> {{formLogin.value | json}}  </pre> -->
-
-
-
-      </p-card>
     </div>
 
   </div>
+    <!-- =====================
+       LADO IZQUIERDO
+  ====================== -->
+  <div class="box-login-left">
+    <img
+      src="/images/firma.png"
+      alt="Firma Segura"
+      class="login-logo"
+    />
+  </div>
+
+
 </div>
