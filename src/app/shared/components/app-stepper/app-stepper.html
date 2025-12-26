@@ -1,8 +1,8 @@
-<p-stepper [(value)]="activeIndex" class="w-full">
+<p-stepper [(value)]="activeIndex" [linear]="true">
 
   <p-step-list>
     @for (step of steps; track step; let i = $index) {
-      <p-step [value]="i" class="flex gap-2 items-center">
+      <p-step [value]="i" >
 
         @if (step.icon) {
           <i [class]="step.icon"></i>

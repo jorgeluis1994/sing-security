@@ -1,0 +1,12 @@
+.doc-item {
+  transition: background-color 0.2s ease;
+}
+
+.doc-item:hover {
+  background: #f3f7f5;
+}
+
+.doc-item.active {
+  background: #e6f4ef;
+  border-left: 4px solid #16ab6a;
+}

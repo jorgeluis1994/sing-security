@@ -1,59 +1,62 @@
 @let activeStep = (activeStep$ | async);
 @let pdfDocs = (documents$ | async) ?? [];
-
 <div class="sceen-sing">
 
   <!-- STEPPER -->
   <div class="box-steper">
-    <p-card class="gradient-card">
-      <app-app-stepper [steps]="steps" [activeIndex]="activeStep ?? 0" (stepChange)="goToStep($event)">
-      </app-app-stepper>
-    </p-card>
+    <app-app-stepper
+      [steps]="steps"
+      [activeIndex]="activeStep ?? 0"
+      (stepChange)="goToStep($event)">
+    </app-app-stepper>
   </div>
 
   <!-- CONTENIDO -->
   <div class="box-conten">
 
     @if (activeStep === 0) {
-    <div class="step-content">
-      <app-dynamic-form [formConfig]="currentForm" [pageIndex]="0"></app-dynamic-form>
-    </div>
+      <app-dynamic-form
+        [formConfig]="currentForm"
+        [pageIndex]="0">
+      </app-dynamic-form>
     }
 
     @if (activeStep === 1) {
-    <div class="step-content">
-
       <app-upload-documents></app-upload-documents>
-
-    </div>
     }
 
     @if (activeStep === 2) {
-    <div class="step-content">
-      <app-pdf-preview-list [documents]="pdfDocs"></app-pdf-preview-list>
-
-    </div>
+      <app-pdf-preview-list
+        [documents]="pdfDocs">
+      </app-pdf-preview-list>
     }
 
   </div>
 
   <!-- TOOLBAR -->
-  <!-- TOOLBAR -->
   <div class="box-toolbar">
     <p-toolbar class="toolbar-fixed">
+
       <div class="p-toolbar-group-left">
-        <p-button label="Atrás" icon="pi pi-arrow-left" (onClick)="goToStep((activeStep ?? 0) - 1)"
+        <p-button
+          label="Atrás"
+          icon="pi pi-arrow-left"
+          (onClick)="goToStep((activeStep ?? 0) - 1)"
           [disabled]="(activeStep ?? 0) === 0">
         </p-button>
       </div>
 
       <div class="p-toolbar-group-right">
-        <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (onClick)="goToStep((activeStep ?? 0) + 1)"
+        <p-button
+          label="Siguiente"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          (onClick)="goToStep((activeStep ?? 0) + 1)"
           [disabled]="!canAdvance()">
         </p-button>
       </div>
-    </p-toolbar>
 
+    </p-toolbar>
   </div>
 
 </div>

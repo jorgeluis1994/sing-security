@@ -5,9 +5,19 @@ import { SignatureMark } from '../../../shared/components/pdf-preview/pdf-previe
 import { SignatureService } from '../services/signature.service';
 import { SignDocumentPayload, SignGraphologicalPayload } from '../models/signature.model';
 import { LoadingService } from '../../../core/services/loading.service';
+import { DocuemntAnalyzeService } from '../services/docuemnt-analyze.service';
 
 @Injectable({ providedIn: 'root' })
 export class SigningFacade {
+
+  private service = inject(DocuemntAnalyzeService);
+  // ================= ANALYZE STATE =================
+  private analyzeResults: { [docName: string]: any } = {};
+  private analyzing: { [docName: string]: boolean } = {};
+
+
+
+
 
   private readonly loading = inject(LoadingService);
 
@@ -100,8 +110,6 @@ export class SigningFacade {
     );
   }
 
-
-
   // ================= ACTION =================
   signGraphological(fullName: string) {
     const pdf = this.documentsSubject.value[0];
@@ -126,6 +134,61 @@ export class SigningFacade {
       finalize(() => this.loading.hide())
     );
   }
+
+  analyzeDocument(doc: SessionDocument): void {
+    if (!doc) return;
+
+    // si ya se está analizando, no repetir
+    if (this.analyzing[doc.name]) return;
+
+    this.analyzing[doc.name] = true;
+    this.loading.show('Analizando documento...');
+
+    const file = this.dataUrlToFile(doc);
+
+    this.service.analyzePdf(file).pipe(
+      finalize(() => {
+        this.analyzing[doc.name] = false;
+        this.loading.hide();
+      })
+    ).subscribe({
+      next: (result) => {
+        // 🔥 guardamos el resultado de ESTE documento
+        this.analyzeResults[doc.name] = result;
+      },
+      error: (err) => {
+        console.error('❌ Error analizando documento', err);
+      }
+    });
+  }
+
+
+  private dataUrlToFile(doc: SessionDocument): File {
+    const arr = doc.dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)![1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], doc.name, { type: mime });
+  }
+  hasAnalysis(doc: SessionDocument): boolean {
+    return !!this.analyzeResults[doc.name];
+  }
+
+  isAnalyzing(doc: SessionDocument): boolean {
+    return !!this.analyzing[doc.name];
+  }
+
+  getAnalysis(doc: SessionDocument): any {
+    return this.analyzeResults[doc.name];
+  }
+
+
 
 
 

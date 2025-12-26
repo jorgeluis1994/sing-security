@@ -34,8 +34,6 @@ import {
     UploadDocuments,
     PdfPreviewList,
     DynamicForm,
-    ValidatePdf,
-    SingPdf,
   ],
   templateUrl: './sing-entry.html',
   styleUrl: './sing-entry.css',

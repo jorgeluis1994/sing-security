@@ -1,9 +1,9 @@
-@if (!documents || documents.length === 0) {
+@if (documents.length === 0) {
 
 <p-card>
   <div class="text-center p-4 text-muted">
-    <i class="pi pi-file-pdf" style="font-size: 2rem"></i>
-    <p class="mt-2 mb-0">No existen documentos para mostrar</p>
+    <i class="pi pi-file-pdf text-2xl"></i>
+    <p>No existen documentos para mostrar</p>
   </div>
 </p-card>
 
@@ -12,63 +12,80 @@
 <div class="container-fluid">
   <div class="row g-3">
 
-    <!-- Sidebar documentos -->
+    <!-- Sidebar -->
     <div class="col-12 col-md-3">
-      <p-card header="Documentos" class="h-100">
+      <p-card header="Documentos">
 
-        <p-table [value]="documents" selectionMode="single" [(selection)]="selectedDoc" dataKey="name"
-          class="p-datatable-sm w-90" [scrollable]="true" scrollHeight="60vh">
+        <p-dataview [value]="documents">
 
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Nombre</th>
-              <th class="text-center" style="width: 7rem">Estado</th>
-              <th class="text-center" style="width: 6rem">Acción</th>
-            </tr>
+          <ng-template #list let-items>
+            <div class="flex flex-column gap-2">
+
+              <div
+                *ngFor="let doc of items"
+                class="doc-item flex justify-content-between align-items-center p-3 border-round hover:surface-100">
+
+                <!-- Izquierda -->
+                <div
+                  class="flex align-items-center gap-3 cursor-pointer"
+                  (click)="selectedDoc = doc">
+
+                  <i class="pi pi-file-pdf text-danger text-xl"></i>
+
+                  <div class="flex flex-column">
+                    <span class="font-medium">{{ doc.name }}</span>
+                    <small class="text-500">
+                      {{ doc.type }} • {{ doc.size / 1024 | number:'1.0-0' }} KB
+                    </small>
+                  </div>
+                </div>
+
+                <!-- Derecha -->
+                <div class="flex align-items-center gap-2">
+
+                  <p-tag
+                    [severity]="facade.hasAnalysis(doc) ? 'success' : 'warn'"
+                    [value]="facade.hasAnalysis(doc) ? 'Analizado' : 'Pendiente'">
+                  </p-tag>
+
+                  <!-- ANALIZAR -->
+                  <button
+                    pButton
+                    icon="pi pi-check"
+                    class="p-button-sm p-button-outlined p-button-success"
+                    pTooltip="Analizar documento"
+                    [loading]="facade.isAnalyzing(doc)"
+                    (click)="facade.analyzeDocument(doc)">
+                  </button>
+
+                  <!-- VER ANÁLISIS -->
+                  <button
+                    pButton
+                    icon="pi pi-eye"
+                    class="p-button-sm p-button-outlined p-button-info"
+                    pTooltip="Ver análisis"
+                    [disabled]="!facade.hasAnalysis(doc)"
+                    (click)="openAnalyzeDialog(doc)">
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
           </ng-template>
 
-          <ng-template pTemplate="body" let-doc>
-            <tr [pSelectableRow]="doc">
-
-              <!-- Nombre -->
-              <td>
-                <i class="pi pi-file-pdf text-danger me-2"></i>
-                {{ doc.name }}
-              </td>
-
-              <!-- Estado (visual) -->
-              <td class="text-center">
-                <p-tag severity="warn" value="PENDIENTE"></p-tag>
-              </td>
-
-              <!-- Acción -->
-              <td class="text-center">
-                <button pButton icon="pi pi-check" class="p-button-sm p-button-outlined p-button-success"
-                  pTooltip="Validar documento">
-                </button>
-                <button pButton icon="pi pi-eye" class="p-button-sm p-button-outlined p-button-info"
-                  pTooltip="Ver análisis" (click)="openAnalyzeDialog(doc)">
-                </button>
-              </td>
-
-            </tr>
-          </ng-template>
-
-        </p-table>
-
-
+        </p-dataview>
 
       </p-card>
     </div>
 
-    <!-- Preview PDF -->
+    <!-- Preview -->
     <div class="col-12 col-md-9">
-
-
-      <app-pdf-preview [pdfSrc]="selectedDoc.dataUrl" (signaturePosition)="onSignatureCaptured($event)">
+      <app-pdf-preview
+        [pdfSrc]="selectedDoc.dataUrl"
+        (signaturePosition)="onSignatureCaptured($event)">
       </app-pdf-preview>
-
-
     </div>
 
   </div>
