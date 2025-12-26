@@ -17,7 +17,12 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/signing/sign.routes').then(m => m.SIGN_ROUTES),
   },
-
+  {
+    path: 'errors/token-expired',
+    loadComponent: () =>
+      import('./features/errors/token-expired/token-expired')
+        .then(c => c.TokenExpired)
+  },
   // 🔐 Privado (con layout)
   {
     path: '',
@@ -32,6 +37,11 @@ export const routes: Routes = [
       },
     ],
   },
+{
+  path: '**',
+  loadComponent: () =>
+    import('./features/errors/not-fout/not-fout')
+      .then(c => c.NotFout)
+}
 
-  { path: '**', redirectTo: '' },
 ];

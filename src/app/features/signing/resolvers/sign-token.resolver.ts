@@ -26,7 +26,7 @@ export class SignTokenResolver implements Resolve<boolean | RedirectCommand> {
     
 
     if (!token) {
-      return new RedirectCommand(this.router.parseUrl('auth/login'));
+      return new RedirectCommand(this.router.parseUrl('/errors/token-expired'));
     }
 
     // 🔄 MOSTRAR LOADING
@@ -44,7 +44,7 @@ export class SignTokenResolver implements Resolve<boolean | RedirectCommand> {
       }),
       catchError(() => {
         this.loading.hide();
-        return of(new RedirectCommand(this.router.parseUrl('/auth/login')));
+        return of(new RedirectCommand(this.router.parseUrl('/errors/token-expired')));
       })
     );
   }
