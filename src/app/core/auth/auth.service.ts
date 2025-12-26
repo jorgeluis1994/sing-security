@@ -6,7 +6,7 @@ import { tap } from "rxjs";
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private baseUrl = environment.api.baseUrl;
-    private auth = environment.auth;
+    private auth = environment.api.auth;
 
     constructor(private http: HttpClient) { }
 

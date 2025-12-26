@@ -1,13 +1,12 @@
-<form [formGroup]="form" class="p-fluid">
+<p-card header="Informacion requerida" class="p-5">
+  <form [formGroup]="form" class="p-fluid">
 
-  <!-- IMPORTANTE: grid también debe ser fluid -->
-  <div class="grid p-fluid">
+    <!-- IMPORTANTE: grid también debe ser fluid -->
+    <div class="grid p-fluid">
 
-    @for (field of fields; track field.id) {
+      @for (field of fields; track field.id) {
 
-      <div
-        class="mb-4 col-12"
-        [ngClass]="field.class || 'col-12'">
+      <div class="mb-4 col-12" [ngClass]="field.class || 'col-12'">
 
         <!-- LABEL -->
         <label class="font-medium mb-2 block">
@@ -16,51 +15,44 @@
 
         <!-- TEXT -->
         @if (field.type === 'Text') {
-          <input
-            pInputText
-            class="w-full"
-            [formControlName]="field.var_answer" />
+        <input pInputText class="w-full" [formControlName]="field.var_answer" />
         }
 
         <!-- SELECT -->
         @if (field.type === 'Select') {
-          <p-select
-            [options]="field.items"
-            [formControlName]="field.var_answer"
-            placeholder="Seleccione"
-            styleClass="w-full">
-          </p-select>
+        <p-select [options]="field.items" [formControlName]="field.var_answer" placeholder="Seleccione"
+          styleClass="w-full">
+        </p-select>
         }
 
         <!-- RADIO -->
         @if (field.type === 'Radio') {
-          <div class="w-full flex gap-4 mt-2 flex-wrap">
-            @for (item of field.items; track item) {
-              <div class="flex align-items-center gap-2">
-                <p-radioButton
-                  [inputId]="field.var_answer + item"
-                  [value]="item"
-                  [formControlName]="field.var_answer">
-                </p-radioButton>
-                <label [for]="field.var_answer + item">
-                  {{ item }}
-                </label>
-              </div>
-            }
+        <div class="w-full flex gap-4 mt-2 flex-wrap">
+          @for (item of field.items; track item) {
+          <div class="flex align-items-center gap-2">
+            <p-radioButton [inputId]="field.var_answer + item" [value]="item" [formControlName]="field.var_answer">
+            </p-radioButton>
+            <label [for]="field.var_answer + item">
+              {{ item }}
+            </label>
           </div>
+          }
+        </div>
         }
 
         <!-- ERROR -->
         @if (form.get(field.var_answer)?.invalid && form.get(field.var_answer)?.touched) {
-          <small class="p-error block mt-1">
-            Campo obligatorio
-          </small>
+        <small class="p-error block mt-1">
+          Campo obligatorio
+        </small>
         }
 
       </div>
 
-    }
+      }
 
-  </div>
+    </div>
 
-</form>
+  </form>
+
+</p-card>

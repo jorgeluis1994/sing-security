@@ -1,0 +1,52 @@
+<!-- HEADER -->
+<div class="dialog-header mb-3 text-center">
+  <i class="pi pi-shield mr-2"></i>
+  <strong>Resultado del análisis</strong>
+</div>
+
+<p-message
+  *ngIf="rows.length"
+  [severity]="getGlobalStatus()"
+  [text]="getGlobalMessage()"
+  class="mb-3">
+</p-message>
+
+<p-divider></p-divider>
+
+<p-table
+  *ngIf="rows.length; else noData"
+  [value]="rows"
+  responsiveLayout="scroll"
+  class="p-datatable-sm">
+
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Regla</th>
+      <th>Esperado</th>
+      <th>Detectado</th>
+      <th class="text-center">Resultado</th>
+      <th class="text-center">Confianza</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td><strong>{{ getRuleLabel(row.ruleCode) }}</strong></td>
+      <td>{{ row.expected }}</td>
+      <td>{{ row.detected }}</td>
+      <td class="text-center">
+        <p-tag
+          [value]="row.result"
+          [severity]="getSeverity(row.result)">
+        </p-tag>
+      </td>
+      <td style="min-width:120px">
+        <p-progressBar [value]="row.confidence"></p-progressBar>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<ng-template #noData>
+  <p-message severity="warn" text="No hay resultados de análisis"></p-message>
+</ng-template>

@@ -1,0 +1,58 @@
+.sceen-sing {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 80px;
+    /* espacio para el toolbar */
+}
+
+/* =======================
+   STEPPER
+======================= */
+
+.box-steper {
+    padding: 20px;
+}
+
+/* =======================
+   CONTENIDO
+======================= */
+
+.box-conten {
+    flex: 1;
+    padding: 10px 35px;
+    background: #f4f8f6;
+
+}
+
+
+/* =======================
+   TOOLBAR FIJO
+======================= */
+
+.box-toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.toolbar-fixed {
+    /* background: linear-gradient(135deg, #16ab6a, #0f766e); */
+    border-radius: 0;
+    border-top: 1px solid rgba(255, 255, 255, .2);
+    color: white;
+}
+
+/* =======================
+   CARD GRADIENT
+======================= */
+
+.gradient-card {
+    /* background: linear-gradient(135deg, #16ab6a, #0f766e); */
+    /* background: linear-gradient(135deg, #22c55e, #16a34a); */
+
+    color: white;
+    border-radius: 14px;
+}

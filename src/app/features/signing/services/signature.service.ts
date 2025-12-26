@@ -8,7 +8,7 @@ import { SignDocumentPayload, SignGraphologicalPayload } from '../models/signatu
 export class SignatureService {
 
   private readonly baseUrl = environment.api.baseUrl;
-  private readonly signUrl = environment.signature.endpoints.sign;
+  private readonly signUrl = environment.api.signature.endpoints.sign;
 
   constructor(private http: HttpClient) { }
 
@@ -46,7 +46,7 @@ export class SignatureService {
     }
 
     return this.http.post(
-      `${this.baseUrl}${environment.signature.endpoints.signGraphological}`,
+      `${this.baseUrl}${environment.api.signature.endpoints.signGraphological}`,
       formData
     );
   }

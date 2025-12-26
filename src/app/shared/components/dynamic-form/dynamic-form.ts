@@ -12,6 +12,7 @@ import { SelectModule } from 'primeng/select';
 import { RadioButtonModule } from 'primeng/radiobutton';
 
 import { DynamicFormConfig, DynamicField } from '../../models/forms-dynamic.entity';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -21,7 +22,8 @@ import { DynamicFormConfig, DynamicField } from '../../models/forms-dynamic.enti
     ReactiveFormsModule,
     InputTextModule,
     SelectModule,
-    RadioButtonModule
+    RadioButtonModule,
+    CardModule
   ],
   templateUrl: './dynamic-form.html',
   styleUrl: './dynamic-form.css',

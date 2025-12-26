@@ -6,7 +6,7 @@ import { environment } from "../../../../environments/environment";
 export class TokenAccessService {
 
     private baseUrl = environment.api.baseUrl;
-    private endpoint = environment.signing.endpoints.validateToken;
+    private endpoint = environment.api.signing.endpoints.validateToken;
 
     constructor(private http: HttpClient) { }
 

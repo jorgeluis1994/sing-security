@@ -1,0 +1,20 @@
+/* El card completo */
+.info-card {
+  min-height: 70vh;               /* Ajusta según tu pantalla */
+  display: flex;
+  align-items: center;            /* Vertical */
+  justify-content: center;        /* Horizontal */
+}
+
+/* Wrapper interno */
+.card-center-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Formulario */
+.form-container {
+  width: 100%;
+  max-width: 700px;               /* 👈 control visual PRO */
+}

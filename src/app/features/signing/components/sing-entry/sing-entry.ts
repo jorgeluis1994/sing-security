@@ -64,6 +64,7 @@ export class SingEntry implements OnInit {
 
   // ================= STEPPER =================
   goToStep(step: number): void {
+    
     this.facade.goToStep(step);
   }
 
