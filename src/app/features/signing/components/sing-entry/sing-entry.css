@@ -68,7 +68,7 @@
 .toolbar-fixed {
   height: 100%;
   border-radius: 0;
-  background: linear-gradient(135deg, #16ab6a, #0f766e);
+  /* background: linear-gradient(135deg, #16ab6a, #0f766e); */
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
 }

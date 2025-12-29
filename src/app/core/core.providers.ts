@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import Lara from '@primeuix/themes/lara';
+import MyPreset from '../../Theme/my-preset';
 
 
 export const CORE_PROVIDERS = [
@@ -13,7 +14,7 @@ export const CORE_PROVIDERS = [
   providePrimeNG({
     ripple: true,
     theme: {
-      preset: Aura,
+      preset: MyPreset,
       options: {
         darkModeSelector: '.dark-theme',
         cssLayer: true,

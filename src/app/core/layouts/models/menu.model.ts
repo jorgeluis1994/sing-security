@@ -4,7 +4,13 @@ export const SIDEBAR_MENU: MenuItem[] = [
   {
     label: 'Dashboard',
     icon: 'pi pi-home',
-    routerLink: '/',
+    items: [
+      {
+        label: 'Inicio',
+        icon: 'pi pi-home',
+        routerLink: '/'
+      }
+    ]
   },
 
   {
@@ -41,3 +47,4 @@ export const SIDEBAR_MENU: MenuItem[] = [
     ],
   },
 ];
+

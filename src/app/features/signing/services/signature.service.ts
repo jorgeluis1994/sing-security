@@ -2,6 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { SignDocumentPayload, SignGraphologicalPayload } from '../models/signature.model';
+import { Observable } from 'rxjs';
+
+export interface SignGraphologicalResponse {
+  pdfUrl: string;
+  semanticHash: string;
+}
+
 
 
 @Injectable({ providedIn: 'root' })
@@ -21,7 +28,10 @@ export class SignatureService {
     );
   }
 
-  signGraphological(payload: SignGraphologicalPayload) {
+  signGraphological(
+    payload: SignGraphologicalPayload
+  ): Observable<SignGraphologicalResponse> {
+
     const formData = new FormData();
 
     // 📄 PDF
@@ -31,7 +41,7 @@ export class SignatureService {
     // ✍️ Nombre
     formData.append('fullName', payload.fullName);
 
-    // 📍 Posición de la firma (OBLIGATORIO)
+    // 📍 Posición
     formData.append('page', payload.position.page.toString());
     formData.append('x', payload.position.x.toString());
     formData.append('y', payload.position.y.toString());
@@ -45,12 +55,12 @@ export class SignatureService {
       formData.append('height', payload.position.height.toString());
     }
 
-    return this.http.post(
+    // 🔥 SOLO se tipa el post
+    return this.http.post<SignGraphologicalResponse>(
       `${this.baseUrl}${environment.api.signature.endpoints.signGraphological}`,
       formData
     );
   }
-
 
   // =========================
   // 🔒 MÉTODO PRIVADO

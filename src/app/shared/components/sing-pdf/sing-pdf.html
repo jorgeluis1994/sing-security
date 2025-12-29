@@ -9,12 +9,17 @@
   </button>
 </div>
 
-<!-- VISOR PDF CENTRADO Y MÁS ANGOSTO -->
+<!-- VISOR PDF CENTRADO -->
 <div class="w-full flex justify-content-center p-4">
   <div class="w-10 md:w-8 lg:w-6">
+
+    <!-- 🔁 Forzar recarga del visor -->
     <app-pdf-preview
-      [pdfSrc]="document.pdfUrl"
-      (signaturePosition)="onSignatureMarked($event)">
-    </app-pdf-preview>
+  *ngIf="pdfKey"
+  [pdfSrc]="(facade.documents$ | async)?.[0]?.dataUrl || ''"
+  (signaturePosition)="onSignatureMarked($event)">
+</app-pdf-preview>
+
+
   </div>
 </div>

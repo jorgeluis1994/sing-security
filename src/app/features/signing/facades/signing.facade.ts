@@ -1,77 +1,42 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, finalize } from 'rxjs';
+import { BehaviorSubject, finalize, tap } from 'rxjs';
+
 import { SessionDocument } from '../services/document.service';
 import { SignatureMark } from '../../../shared/components/pdf-preview/pdf-preview';
 import { SignatureService } from '../services/signature.service';
-import { SignDocumentPayload, SignGraphologicalPayload } from '../models/signature.model';
+import {
+  SignDocumentPayload,
+  SignGraphologicalPayload
+} from '../models/signature.model';
 import { LoadingService } from '../../../core/services/loading.service';
 import { DocuemntAnalyzeService } from '../services/docuemnt-analyze.service';
 
 @Injectable({ providedIn: 'root' })
 export class SigningFacade {
 
-  private service = inject(DocuemntAnalyzeService);
-  // ================= ANALYZE STATE =================
-  private analyzeResults: { [docName: string]: any } = {};
-  private analyzing: { [docName: string]: boolean } = {};
-
-
-
-
-
+  private readonly analyzeService = inject(DocuemntAnalyzeService);
+  private readonly signatureService = inject(SignatureService);
   private readonly loading = inject(LoadingService);
 
-  private readonly signatureService = inject(SignatureService);
+  // ================= ANALYZE STATE =================
+  private analyzeResults: Record<string, any> = {};
+  private analyzing: Record<string, boolean> = {};
 
-  // ================= STATE (PRIVATE) =================
-  private readonly activeStepSubject = new BehaviorSubject<number>(0);
-
+  // ================= STATE =================
   private readonly documentsSubject = new BehaviorSubject<SessionDocument[]>([]);
-
-  private readonly htmlSubject = new BehaviorSubject<string | null>(null);
-
   private readonly signaturesSubject = new BehaviorSubject<SignatureMark[]>([]);
-
   private readonly certificateSubject = new BehaviorSubject<{
     file: File;
     password: string;
   } | null>(null);
 
-  // ================= PUBLIC STREAMS =================
-  readonly activeStep$ = this.activeStepSubject.asObservable();
+  // ================= STREAMS =================
   readonly documents$ = this.documentsSubject.asObservable();
-  readonly html$ = this.htmlSubject.asObservable();
   readonly signatures$ = this.signaturesSubject.asObservable();
-
-  // ================= STEP LOGIC =================
-  goToStep(step: number) {
-    if (step < 0) return;
-
-    if (step > this.activeStepSubject.value && !this.canAdvance()) {
-      return;
-    }
-
-    this.activeStepSubject.next(step);
-  }
-
-  canAdvance(): boolean {
-    switch (this.activeStepSubject.value) {
-      case 1:
-        return this.documentsSubject.value.length > 0;
-      case 4:
-        return this.signaturesSubject.value.length > 0;
-      default:
-        return true;
-    }
-  }
 
   // ================= DATA =================
   setDocuments(docs: SessionDocument[]) {
     this.documentsSubject.next(docs);
-  }
-
-  setHtml(html: string) {
-    this.htmlSubject.next(html);
   }
 
   addSignature(mark: SignatureMark) {
@@ -81,7 +46,11 @@ export class SigningFacade {
     ]);
   }
 
-  // ================= ACTION =================
+  setCertificate(file: File, password: string) {
+    this.certificateSubject.next({ file, password });
+  }
+
+  // ================= ACTIONS =================
   sign() {
     const pdf = this.documentsSubject.value[0];
     const cert = this.certificateSubject.value;
@@ -96,10 +65,7 @@ export class SigningFacade {
         name: pdf.name,
         dataUrl: pdf.dataUrl,
       },
-      certificate: {
-        file: cert.file,
-        password: cert.password,
-      },
+      certificate: cert,
       positions,
     };
 
@@ -110,72 +76,63 @@ export class SigningFacade {
     );
   }
 
-  // ================= ACTION =================
-  signGraphological(fullName: string) {
-    const pdf = this.documentsSubject.value[0];
-    const positions = this.signaturesSubject.value;
+signGraphological(fullName: string) {
+  const pdf = this.documentsSubject.value[0];
+  const positions = this.signaturesSubject.value;
 
-    if (!pdf || !fullName || !positions.length) {
-      throw new Error('❌ Datos incompletos para firma grafológica');
-    }
-
-    const payload: SignGraphologicalPayload = {
-      pdf: {
-        name: pdf.name,
-        dataUrl: pdf.dataUrl,
-      },
-      fullName,
-      position: positions[0], // solo una firma grafológica
-    };
-
-    this.loading.show('Firmando documento grafológicamente...');
-
-    return this.signatureService.signGraphological(payload).pipe(
-      finalize(() => this.loading.hide())
-    );
+  if (!pdf || !fullName || !positions.length) {
+    throw new Error('❌ Datos incompletos para firma grafológica');
   }
 
-  analyzeDocument(doc: SessionDocument): void {
-    if (!doc) return;
+  const payload: SignGraphologicalPayload = {
+    pdf: {
+      name: pdf.name,
+      dataUrl: pdf.dataUrl,
+    },
+    fullName,
+    position: positions[0],
+  };
 
-    // si ya se está analizando, no repetir
-    if (this.analyzing[doc.name]) return;
+  this.loading.show('Firmando documento grafológicamente...');
+
+  return this.signatureService.signGraphological(payload).pipe(
+    tap(() => {
+      // 👇 cuando ya firmó
+      this.loading.hide();
+      this.loading.show('Firma completada, procesando documento...');
+    }),
+    finalize(() => {
+      // 👇 al final de todo
+      this.loading.hide();
+    })
+  );
+}
+
+
+  // ================= ANALYZE =================
+  analyzeDocument(doc: SessionDocument): void {
+    if (!doc || this.analyzing[doc.name]) return;
 
     this.analyzing[doc.name] = true;
     this.loading.show('Analizando documento...');
 
     const file = this.dataUrlToFile(doc);
 
-    this.service.analyzePdf(file).pipe(
+    this.analyzeService.analyzePdf(file).pipe(
       finalize(() => {
         this.analyzing[doc.name] = false;
         this.loading.hide();
       })
     ).subscribe({
-      next: (result) => {
-        // 🔥 guardamos el resultado de ESTE documento
+      next: result => {
         this.analyzeResults[doc.name] = result;
       },
-      error: (err) => {
+      error: err => {
         console.error('❌ Error analizando documento', err);
       }
     });
   }
 
-
-  private dataUrlToFile(doc: SessionDocument): File {
-    const arr = doc.dataUrl.split(',');
-    const mime = arr[0].match(/:(.*?);/)![1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    return new File([u8arr], doc.name, { type: mime });
-  }
   hasAnalysis(doc: SessionDocument): boolean {
     return !!this.analyzeResults[doc.name];
   }
@@ -188,11 +145,17 @@ export class SigningFacade {
     return this.analyzeResults[doc.name];
   }
 
+  // ================= UTILS =================
+  private dataUrlToFile(doc: SessionDocument): File {
+    const [meta, base64] = doc.dataUrl.split(',');
+    const mime = meta.match(/:(.*?);/)![1];
+    const bytes = atob(base64);
+    const buffer = new Uint8Array(bytes.length);
 
+    for (let i = 0; i < bytes.length; i++) {
+      buffer[i] = bytes.charCodeAt(i);
+    }
 
-
-
-
+    return new File([buffer], doc.name, { type: mime });
+  }
 }
-
-

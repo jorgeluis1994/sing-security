@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #16ab6a, #0f766e);
+
 }
 
 .box-expired {
@@ -12,7 +12,7 @@
   align-items: center;
   text-align: center;
 
-  background: rgba(255, 255, 255, 0.12);
+    background: linear-gradient(135deg, #16ab6a, #0f766e);
   backdrop-filter: blur(6px);
 
   padding: 2.5rem;

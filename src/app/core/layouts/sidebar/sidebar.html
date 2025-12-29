@@ -1,23 +1,70 @@
-<aside class="sidebar p-3">
+<aside class="sidebar p-3" [class.collapsed]="sidebarCollapsed">
 
-  <!-- Header del sidebar -->
+  <!-- HEADER -->
   <div class="sidebar-header">
-    <span class="logo">Firma</span>
+    <span class="logo">
+      FIRMA<span class="text-primary">APP</span>
+    </span>
 
     <p-button
       icon="pi pi-angle-left"
       text
       rounded
       size="small"
-      (onClick)="toggleSidebar()"
-      class="toggle-btn">
+      (onClick)="toggleSidebar()">
     </p-button>
   </div>
 
-  <p-panelMenu
+  <!-- MENU PRIMEAPP -->
+  <p-menu
     [model]="menuItems"
-    [multiple]="true"
-    styleClass="w-full">
-  </p-panelMenu>
+    class="w-full"
+    styleClass="sidebar-menu">
+
+    <!-- LOGO / START -->
+    <ng-template pTemplate="start">
+      <div class="menu-start">
+        <span class="text-sm font-semibold text-gray-500">
+          MENÚ
+        </span>
+      </div>
+    </ng-template>
+
+    <!-- HEADER DE SUBMENU -->
+    <ng-template pTemplate="submenuheader" let-item>
+      <span class="submenu-title">
+        {{ item.label }}
+      </span>
+    </ng-template>
+
+    <!-- ITEM -->
+    <ng-template pTemplate="item" let-item>
+      <a
+        pRipple
+        class="menu-item"
+        [routerLink]="item.routerLink">
+
+        <i [class]="item.icon"></i>
+        <span class="label">{{ item.label }}</span>
+
+        <p-badge
+          *ngIf="item.badge"
+          [value]="item.badge" />
+
+      </a>
+    </ng-template>
+
+  </p-menu>
+
+  <!-- FOOTER -->
+  <div class="sidebar-footer">
+    <button class="user-btn">
+      <p-avatar shape="circle"></p-avatar>
+      <div class="user-info">
+        <span class="font-bold">Amy Elsner</span>
+        <small>Administrador</small>
+      </div>
+    </button>
+  </div>
 
 </aside>

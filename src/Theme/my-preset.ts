@@ -7,36 +7,36 @@ const MyPreset = definePreset(Aura, {
        COLOR PRIMARIO (botones, steps)
     =============================== */
     primary: {
-      50: '{blue.50}',
-      100: '{blue.100}',
-      200: '{blue.200}',
-      300: '{blue.300}',
-      400: '{blue.400}',
-      500: '#2563eb', // 🔵 corporativo
-      600: '#1d4ed8',
-      700: '#1e40af',
-      800: '#1e3a8a',
-      900: '#172554',
-      950: '{blue.950}',
+      50: '#ecfdf5',
+      100: '#d1fae5',
+      200: '#a7f3d0',
+      300: '#6ee7b7',
+      400: '#34d399',
+      500: '#0d9488', // 🟢 teal corporativo
+      600: '#0f766e',
+      700: '#115e59',
+      800: '#134e4a',
+      900: '#042f2e',
+      950: '#022c22',
     },
 
     /* ===============================
-       SUPERFICIES (cards, panels)
+       SUPERFICIES
     =============================== */
     surface: {
       0: '#ffffff',
-      50: '#f9fafb',
-      100: '#f3f4f6',
-      200: '#e5e7eb',
-      300: '#d1d5db'
+      50: '#f0fdfa',
+      100: '#ccfbf1',
+      200: '#99f6e4',
+      300: '#5eead4'
     },
 
     /* ===============================
        TEXTO
     =============================== */
     text: {
-      color: '#111827',
-      muted: '#6b7280',
+      color: '#042f2e',
+      muted: '#64748b',
       inverse: '#ffffff'
     },
 
@@ -44,8 +44,8 @@ const MyPreset = definePreset(Aura, {
        BORDES
     =============================== */
     border: {
-      color: '#e5e7eb',
-      radius: '0.75rem' // rounded moderno
+      color: '#ccfbf1',
+      radius: '0.75rem'
     },
 
     /* ===============================
@@ -59,14 +59,14 @@ const MyPreset = definePreset(Aura, {
     },
 
     /* ===============================
-       INPUTS (text, select, radio)
+       INPUTS
     =============================== */
     input: {
       background: '#ffffff',
-      borderColor: '#d1d5db',
+      borderColor: '#99f6e4',
       borderRadius: '0.6rem',
-      focusBorderColor: '#2563eb',
-      focusRingColor: 'rgba(37,99,235,0.25)'
+      focusBorderColor: '#0d9488',
+      focusRingColor: 'rgba(13,148,136,0.25)'
     },
 
     /* ===============================
@@ -87,7 +87,7 @@ const MyPreset = definePreset(Aura, {
     =============================== */
     card: {
       background: '#ffffff',
-      shadow: '0 4px 12px rgba(0,0,0,0.05)',
+      shadow: '0 4px 12px rgba(13,148,136,0.15)',
       borderRadius: '1rem'
     },
 
@@ -96,7 +96,7 @@ const MyPreset = definePreset(Aura, {
     =============================== */
     toolbar: {
       background: '#ffffff',
-      borderColor: '#e5e7eb'
+      borderColor: '#ccfbf1'
     }
   }
 });

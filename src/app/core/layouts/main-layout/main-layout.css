@@ -5,12 +5,7 @@
 }
 
 /* Sidebar */
-.sidebar {
-  width: 260px;              /* ancho fijo */
-  background: #1f2937;       /* opcional */
-  color: white;
-  flex-shrink: 0;            /* NO se encoge */
-}
+/*  */
 
 /* Contenido derecho */
 .content {

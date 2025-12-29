@@ -1,0 +1,136 @@
+/* ===============================
+   CONTENEDOR PRINCIPAL
+================================ */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: var(--surface-card);
+  border-right: 1px solid var(--surface-border);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.25s ease;
+  overflow: hidden;
+}
+
+/* ===============================
+   SIDEBAR COLAPSADO
+================================ */
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* Oculta textos al colapsar */
+.sidebar.collapsed .logo,
+.sidebar.collapsed .p-menuitem-text,
+.sidebar.collapsed .user-info {
+  display: none;
+}
+
+/* ===============================
+   HEADER
+================================ */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ===============================
+   PANEL MENU
+================================ */
+.sidebar-menu {
+  border: none;
+}
+
+/* Header de grupo */
+.sidebar-menu .p-panelmenu-header-link {
+  padding: 0.75rem 0.5rem;
+  font-weight: 600;
+}
+
+/* Ítems */
+.sidebar-menu .p-menuitem-link {
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  margin: 2px 4px;
+  transition: background 0.2s ease;
+}
+
+/* Hover */
+.sidebar-menu .p-menuitem-link:hover {
+  background: var(--surface-hover);
+}
+
+/* Iconos */
+.sidebar-menu i {
+  font-size: 1rem;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+/* Badge */
+.sidebar-menu .p-badge {
+  margin-left: auto;
+}
+
+/* Shortcut */
+.shortcut {
+  margin-left: auto;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border: 1px solid var(--surface-border);
+  border-radius: 4px;
+  color: var(--text-color-secondary);
+}
+
+/* ===============================
+   FOOTER
+================================ */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--surface-border);
+}
+
+.sidebar-footer button {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sidebar-footer button:hover {
+  background: var(--surface-hover);
+}
+
+/* ===============================
+   USUARIO
+================================ */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+  }
+}
