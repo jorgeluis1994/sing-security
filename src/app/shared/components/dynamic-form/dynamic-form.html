@@ -1,53 +1,66 @@
-<p-card header="Informacion requerida" class="p-5">
+<p-card [header]="formConfig.name" class="card-centered-header">
+
   <form [formGroup]="form" class="p-fluid">
 
-    <!-- IMPORTANTE: grid también debe ser fluid -->
-    <div class="grid p-fluid">
+    <div class="container-form">
 
       @for (field of fields; track field.id) {
 
-      <div class="mb-4 col-12" [ngClass]="field.class || 'col-12'">
+        <!-- CAMPO -->
+        <div class="field-container">
 
-        <!-- LABEL -->
-        <label class="font-medium mb-2 block">
-          {{ field.name }}
-        </label>
+          <!-- LABEL ARRIBA -->
+          <label class="field-label">
+            {{ field.name }}
+          </label>
 
-        <!-- TEXT -->
-        @if (field.type === 'Text') {
-        <input pInputText class="w-full" [formControlName]="field.var_answer" />
-        }
-
-        <!-- SELECT -->
-        @if (field.type === 'Select') {
-        <p-select [options]="field.items" [formControlName]="field.var_answer" placeholder="Seleccione"
-          styleClass="w-full">
-        </p-select>
-        }
-
-        <!-- RADIO -->
-        @if (field.type === 'Radio') {
-        <div class="w-full flex gap-4 mt-2 flex-wrap">
-          @for (item of field.items; track item) {
-          <div class="flex align-items-center gap-2">
-            <p-radioButton [inputId]="field.var_answer + item" [value]="item" [formControlName]="field.var_answer">
-            </p-radioButton>
-            <label [for]="field.var_answer + item">
-              {{ item }}
-            </label>
-          </div>
+          <!-- TEXT -->
+          @if (field.type === 'Text') {
+            <input
+              pInputText
+              class="w-full"
+              [formControlName]="field.var_answer" />
           }
+
+          <!-- SELECT -->
+          @if (field.type === 'Select') {
+            <p-select
+              [options]="field.items"
+              [formControlName]="field.var_answer"
+              placeholder="Seleccione"
+              styleClass="w-full">
+            </p-select>
+          }
+
+          <!-- RADIO -->
+          @if (field.type === 'Radio') {
+            <div class="radio-group">
+              @for (item of field.items; track item) {
+                <div class="radio-item">
+                  <p-radioButton
+                    [value]="item"
+                    [formControlName]="field.var_answer"
+                    [inputId]="field.var_answer + item">
+                  </p-radioButton>
+                  <label [for]="field.var_answer + item">
+                    {{ item }}
+                  </label>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- ERROR -->
+          @if (
+            form.get(field.var_answer)?.invalid &&
+            form.get(field.var_answer)?.touched
+          ) {
+            <small class="p-error">
+              Campo obligatorio
+            </small>
+          }
+
         </div>
-        }
-
-        <!-- ERROR -->
-        @if (form.get(field.var_answer)?.invalid && form.get(field.var_answer)?.touched) {
-        <small class="p-error block mt-1">
-          Campo obligatorio
-        </small>
-        }
-
-      </div>
 
       }
 

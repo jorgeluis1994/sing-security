@@ -1,31 +1,41 @@
-<p-card header="Subir documentos" class="p-5">
+<p-card class="upload-card">
 
-  <p-fileUpload
-    mode="basic"
-    name="documents"
-    accept="application/pdf"
-    chooseLabel="Seleccionar PDF"
-    [multiple]="true"
-    [auto]="false"
-    (onSelect)="onSelect($event)">
-  </p-fileUpload>
+  <div class="upload-wrapper">
 
-  <div class="mt-4" *ngIf="documents.length > 0">
-    <h5>Documentos cargados</h5>
+    <p-fileUpload name="documents" mode="advanced" accept="application/pdf" [multiple]="true" [maxFileSize]="5000000"
+      [customUpload]="true" (uploadHandler)="onUpload($event)" [showUploadButton]="true" [showCancelButton]="false"
+      styleClass="file-upload-custom">
 
-    <ul class="list-group">
-      <li *ngFor="let doc of documents; let i = index"
-          class="list-group-item d-flex justify-content-between align-items-center">
-        {{ doc.name }}
-        <span>
-          <p-tag value="PDF" severity="success"></p-tag>
-          <button pButton icon="pi pi-trash"
-                  class="p-button-text p-button-danger"
-                  (click)="removeFile(i)">
-          </button>
-        </span>
-      </li>
-    </ul>
+      <!-- 👇 ESTA ES LA CLAVE -->
+      <ng-template pTemplate="empty">
+        <div class="drop-zone">
+          <i class="pi pi-file-pdf pdf-icon"></i>
+          <p class="drop-title">Arrastra y suelta tus documentos</p>
+          <small class="drop-subtitle">Solo archivos PDF (máx. 5MB)</small>
+        </div>
+      </ng-template>
+
+    </p-fileUpload>
+
+
   </div>
-</p-card>
 
+  <!-- LISTA -->
+  <div class="files" *ngIf="documents.length > 0">
+    <div class="file-row" *ngFor="let doc of documents; let i = index">
+
+      <div class="file-info">
+        <i class="pi pi-file-pdf file-icon"></i>
+        <div class="file-text">
+          <span class="file-name">{{ doc.name }}</span>
+          <small class="file-size">{{ doc.size | number }} bytes</small>
+        </div>
+      </div>
+
+      <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="removeFile(i)">
+      </button>
+
+    </div>
+  </div>
+
+</p-card>

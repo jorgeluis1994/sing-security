@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output, inject, OnInit } from '@angular/core';
 import { FileUploadModule } from 'primeng/fileupload';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { DocumentService } from '../../../features/signing/services/document.service';
+
+import {
+  DocumentIpfsFacade,
+  IpfsDocument
+} from '../../../features/signing/facades/document-ipfs.facade';
 
 @Component({
   selector: 'app-upload-documents',
+  standalone: true,
   imports: [
     CommonModule,
     FileUploadModule,
@@ -18,35 +23,66 @@ import { DocumentService } from '../../../features/signing/services/document.ser
   templateUrl: './upload-documents.html',
   styleUrl: './upload-documents.css',
 })
-export class UploadDocuments {
+export class UploadDocuments implements OnInit {
 
-  documents: File[] = [];
+  @Output() validChange = new EventEmitter<boolean>();
 
-  constructor(private documentService: DocumentService) {}
+  private readonly facade = inject(DocumentIpfsFacade);
 
-  async onSelect(event: any) {
-    const files: File[] = event.files;
+  // 👇 ESTADO QUE USA EL HTML
+  documents: IpfsDocument[] = [];
+
+  ngOnInit(): void {
+    // 🔁 sincroniza UI con el facade
+    this.facade.documents$.subscribe(docs => {
+      this.documents = docs;
+      this.validChange.emit(docs.length > 0);
+    });
+  }
+
+  async onUpload(event: any): Promise<void> {
+    const files: File[] = event.files ?? [];
+
+    const docs: IpfsDocument[] = [];
 
     for (const file of files) {
-      if (file.type !== 'application/pdf') {
-        console.warn('❌ No es PDF:', file.name);
-        continue;
-      }
-      this.documents.push(file);
+      if (file.type !== 'application/pdf') continue;
+
+      const dataUrl = await this.fileToDataUrl(file);
+
+      docs.push({
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        file,
+        blobUrl: URL.createObjectURL(file),
+        dataUrl,
+        uploaded: false,
+      });
     }
 
-    // 💾 Guardar en sesión
-    await this.documentService.saveToSession(this.documents);
+    if (!docs.length) return;
+
+    this.facade.addDocuments(docs);
   }
 
-  removeFile(index: number) {
-    this.documents.splice(index, 1);
+  // 👇 ESTE ES EL QUE FALTABA
+  removeFile(index: number): void {
+    const updated = [...this.documents];
+    updated.splice(index, 1);
 
-    // 🔄 Actualizar sesión
-    this.documentService.saveToSession(this.documents);
+    this.facade.setDocuments(updated);
+    this.validChange.emit(updated.length > 0);
   }
 
-  canContinue(): boolean {
-    return this.documents.length > 0;
+  // =====================
+  // 🔧 UTIL
+  // =====================
+  private fileToDataUrl(file: File): Promise<string> {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.readAsDataURL(file);
+    });
   }
 }

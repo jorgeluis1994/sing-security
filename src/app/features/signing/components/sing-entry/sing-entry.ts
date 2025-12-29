@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { StepsModule } from 'primeng/steps';
 import { CardModule } from 'primeng/card';
@@ -9,17 +9,16 @@ import { AppStepper } from '../../../../shared/components/app-stepper/app-steppe
 import { UploadDocuments } from '../../../../shared/components/upload-documents/upload-documents';
 import { PdfPreviewList } from '../../../../shared/components/pdf-preview-list/pdf-preview-list';
 import { DynamicForm } from '../../../../shared/components/dynamic-form/dynamic-form';
-import { ValidatePdf } from '../../../../shared/components/validate-pdf/validate-pdf';
 import { SingPdf } from '../../../../shared/components/sing-pdf/sing-pdf';
 
-import { DocumentService } from '../../services/document.service';
-import { SigningFacade } from '../../facades/signing.facade';
+import { DocumentIpfsFacade } from '../../facades/document-ipfs.facade';
+import { StepFacade } from '../../facades/step.facade';
 
-import { SignatureMark } from '../../../../shared/components/pdf-preview/pdf-preview';
 import {
   SIGNING_FORM_CONFIG,
   SIGNING_STEPS
 } from '../../config/signing-form.config';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-sing-entry',
@@ -34,83 +33,65 @@ import {
     UploadDocuments,
     PdfPreviewList,
     DynamicForm,
+    SingPdf
   ],
   templateUrl: './sing-entry.html',
   styleUrl: './sing-entry.css',
 })
-export class SingEntry implements OnInit {
+export class SingEntry {
 
-  // ================= DEPENDENCIES =================
-  private readonly facade = inject(SigningFacade);
-  private readonly documentService = inject(DocumentService);
-  fullName = 'Jorge Luis';
+  private readonly destroy$ = new Subject<void>();
 
-  // ================= UI DATA =================
+  private readonly stepFacade = inject(StepFacade);
+  private readonly ipfsFacade = inject(DocumentIpfsFacade);
+
   steps = SIGNING_STEPS;
   currentForm = SIGNING_FORM_CONFIG[0];
 
-  // ================= STATE (FROM FACADE) =================
-  activeStep$ = this.facade.activeStep$;
-  documents$ = this.facade.documents$;
+  activeStep$ = this.stepFacade.activeStep$;
+  documents$ = this.ipfsFacade.documents$;
 
-  // ================= LIFECYCLE =================
+  isFormValid = false;
+  documentsValid = false;
+
   ngOnInit(): void {
-    this.documentService.docs$.subscribe(docs => {
-      this.facade.setDocuments(docs);
-    });
+    this.stepFacade.activeStep$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(step => {
+        console.log('[ENTRY] step =', step);
+
+        if (step === 2) {
+          console.log('[ENTRY] trigger IPFS');
+          this.ipfsFacade.uploadAll();
+        }
+      });
   }
 
-  // ================= STEPPER =================
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onFormValid(valid: boolean) {
+    this.isFormValid = valid;
+  }
+
+  onDocumentsValid(valid: boolean) {
+    this.documentsValid = valid;
+  }
+
   goToStep(step: number): void {
-    
-    this.facade.goToStep(step);
+    if (!this.canAdvance()) return;
+    this.stepFacade.goTo(step);
   }
 
   canAdvance(): boolean {
-    return this.facade.canAdvance();
+    const step = this.stepFacade.currentStep;
+
+    if (step === 0) return this.isFormValid;
+    if (step === 1) return this.documentsValid;
+    if (step === 2) return !this.ipfsFacade.isUploading();
+    return true;
   }
-
-  // ================= EVENTS FROM CHILDREN =================
-  onSignatureCaptured(mark: SignatureMark): void {
-    this.facade.addSignature(mark);
-  }
-
-  onHtmlChange(html: string): void {
-    this.facade.setHtml(html);
-  }
-
-  // ================= ACTION =================
-  signDocument(): void {
-    this.facade.sign().subscribe({
-      next: res => {
-        console.log('✅ Documento firmado', res);
-        // aquí luego puedes:
-        // - descargar PDF
-        // - mostrar toast
-        // - avanzar a paso final
-      },
-      error: err => {
-        console.error('❌ Error firmando', err);
-      },
-    });
-  }
-
-  signGraphological(): void {
-    if (!this.fullName) {
-      alert('Ingrese su nombre completo');
-      return;
-    }
-
-    this.facade.signGraphological(this.fullName).subscribe({
-      next: res => {
-        console.log('✍️ Documento firmado (grafológico)', res);
-        // toast
-        // avanzar paso
-      },
-      error: err => {
-        console.error('❌ Error firmando (grafológico)', err);
-      },
-    });
-  }
-
 }
+

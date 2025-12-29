@@ -1,20 +1,36 @@
-/* El card completo */
-.info-card {
-  min-height: 70vh;               /* Ajusta según tu pantalla */
+.container-form {
   display: flex;
-  align-items: center;            /* Vertical */
-  justify-content: center;        /* Horizontal */
+  flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
-/* Wrapper interno */
-.card-center-wrapper {
-  width: 100%;
+/* Cada campo */
+.field-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 48%; /* 2 columnas */
 }
 
-/* Formulario */
-.form-container {
-  width: 100%;
-  max-width: 700px;               /* 👈 control visual PRO */
+/* Label */
+.field-label {
+  font-weight: 500;
 }
+
+/* Radios */
+.radio-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+/* Centra SOLO el header del p-card */
+:host ::ng-deep .card-centered-header .p-card-title {
+  text-align: center;
+}
+

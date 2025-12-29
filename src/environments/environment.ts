@@ -68,6 +68,19 @@ export const environment = {
       },
     },
 
+    /* =========================
+         * 📦 IPFS – Almacenamiento descentralizado
+         * Utilizado para:
+         * - Subir archivos en formato buffer
+         * - Persistir documentos firmados
+         * - Integración con sistemas blockchain / hash
+         * ========================= */
+    ipfsFilw: {
+      baseUrl: 'https://api-dev-001.doctor360.website:29000',
+      endpoints: {
+        buffer: '/buffer',
+      },
+    },
     /* 🚀 Futuras APIs */
     biometric: {
       baseUrl: '',

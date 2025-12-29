@@ -1,50 +1,41 @@
 import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit } from '@angular/core';
 import Quill from 'quill';
 import { ButtonModule } from 'primeng/button';
+import { PdfPreview, SignatureMark } from "../pdf-preview/pdf-preview";
+import { CardModule } from 'primeng/card';
+import { SessionDocument } from '../../../features/signing/services/document.service';
 
 @Component({
   selector: 'app-sing-pdf',
   standalone: true,
-  imports: [ButtonModule],
+  imports: [ButtonModule, PdfPreview, CardModule],
+
   templateUrl: './sing-pdf.html',
 })
-export class SingPdf implements AfterViewInit {
+export class SingPdf {
+  
+  pdfUrl = 'assets/sample.pdf';
 
-  @ViewChild('editor', { static: true }) editorRef!: ElementRef;
+  @ViewChild('pdfPreview') pdfPreview!: PdfPreview;
 
-  @Output() htmlChange = new EventEmitter<string>();
-  @Output() signaturePosition = new EventEmitter<number>();
+  signatures: SignatureMark[] = [];
 
-  private quill!: Quill;
+  selectedDoc!: SessionDocument;
 
-  ngAfterViewInit() {
-    this.quill = new Quill(this.editorRef.nativeElement, {
-      theme: 'snow',
-      modules: {
-        toolbar: [
-          ['bold', 'italic', 'underline'],
-          [{ list: 'ordered' }, { list: 'bullet' }],
-          ['link']
-        ]
-      }
-    });
 
-    this.quill.on('text-change', () => {
-      const html = this.editorRef.nativeElement.querySelector('.ql-editor').innerHTML;
-      console.log('📄 HTML desde Quill:', html);
-      this.htmlChange.emit(html);
-    });
+  // 👉 botón Firmar
+  markSignature(): void {
+    if (!this.pdfPreview) return;
+
+    this.pdfPreview.onToggleSignature(true);
   }
 
-  markSignature() {
-    const html = this.editorRef.nativeElement.querySelector('.ql-editor').innerHTML;
+  // 👉 recibir posición
+  onSignatureMarked(mark: SignatureMark): void {
+    console.log('📨 Firma recibida en padre:', mark);
+    this.signatures.push(mark);
 
-    if (html.includes('[FIRMA_AQUI]')) return;
-
-    this.quill.clipboard.dangerouslyPasteHTML(
-      html + '<p><strong style="color:red">[FIRMA_AQUI]</strong></p>'
-    );
-
-    this.signaturePosition.emit(html.length);
+    // aquí luego mandas al backend / IPFS
   }
+
 }

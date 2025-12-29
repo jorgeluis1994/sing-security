@@ -18,7 +18,7 @@ import { LoadingService } from '../../../core/services/loading.service';
 export class Loading {
 
   loading = false;
-  message: string | null = null; // ✅ ESTA ES LA LÍNEA QUE FALTABA
+  message: string | null = null; 
 
   constructor(private loadingService: LoadingService) {}
 

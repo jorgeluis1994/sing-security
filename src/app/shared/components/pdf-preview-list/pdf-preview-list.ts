@@ -51,20 +51,20 @@ export class PdfPreviewList implements OnInit {
     const result = this.facade.getAnalysis(doc);
     if (!result) return;
 
-this.dialogService.open(AnalyzeDialog, {
-  header: 'Análisis del documento',
-  width: '70vw',
-  height: '80vh',
-  modal: true,
-  closable: true,   // 👈 ESTO
-  draggable: false,
-  resizable: false,
-  data: result,
-  breakpoints: {
-    '960px': '90vw',
-    '640px': '100vw'
-  }
-});
+    this.dialogService.open(AnalyzeDialog, {
+      header: 'Análisis del documento',
+      width: '70vw',
+      height: '80vh',
+      modal: true,
+      closable: true,   // 👈 ESTO
+      draggable: false,
+      resizable: false,
+      data: result,
+      breakpoints: {
+        '960px': '90vw',
+        '640px': '100vw'
+      }
+    });
 
   }
 }

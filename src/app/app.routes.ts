@@ -40,7 +40,7 @@ export const routes: Routes = [
 {
   path: '**',
   loadComponent: () =>
-    import('./features/errors/not-fout/not-fout')
+    import('./features/errors/not-found/not-found')
       .then(c => c.NotFout)
 }
 

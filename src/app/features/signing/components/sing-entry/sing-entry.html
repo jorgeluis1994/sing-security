@@ -4,10 +4,7 @@
 
   <!-- STEPPER -->
   <div class="box-steper">
-    <app-app-stepper
-      [steps]="steps"
-      [activeIndex]="activeStep ?? 0"
-      (stepChange)="goToStep($event)">
+    <app-app-stepper [steps]="steps" [activeIndex]="activeStep ?? 0" (stepChange)="goToStep($event)">
     </app-app-stepper>
   </div>
 
@@ -15,21 +12,28 @@
   <div class="box-conten">
 
     @if (activeStep === 0) {
-      <app-dynamic-form
-        [formConfig]="currentForm"
-        [pageIndex]="0">
-      </app-dynamic-form>
+    <app-dynamic-form [formConfig]="currentForm" [pageIndex]="0" (validChange)="onFormValid($event)">
+    </app-dynamic-form>
+
     }
 
     @if (activeStep === 1) {
-      <app-upload-documents></app-upload-documents>
+    <app-upload-documents 
+    (validChange)="onDocumentsValid($event)">
+    </app-upload-documents>
     }
 
+
     @if (activeStep === 2) {
-      <app-pdf-preview-list
-        [documents]="pdfDocs">
-      </app-pdf-preview-list>
+    <app-pdf-preview-list 
+    [documents]="pdfDocs">
+    </app-pdf-preview-list>
     }
+
+
+    @if (activeStep === 3) {
+      <app-sing-pdf></app-sing-pdf>
+    } 
 
   </div>
 
@@ -38,21 +42,21 @@
     <p-toolbar class="toolbar-fixed">
 
       <div class="p-toolbar-group-left">
-        <p-button
-          label="Atrás"
-          icon="pi pi-arrow-left"
-          (onClick)="goToStep((activeStep ?? 0) - 1)"
-          [disabled]="(activeStep ?? 0) === 0">
+        <p-button 
+        label="Atrás" 
+        icon="pi pi-arrow-left" 
+        (onClick)="goToStep((activeStep ?? 0) - 1)"
+        [disabled]="(activeStep ?? 0) === 0">
         </p-button>
       </div>
 
       <div class="p-toolbar-group-right">
-        <p-button
-          label="Siguiente"
-          icon="pi pi-arrow-right"
-          iconPos="right"
-          (onClick)="goToStep((activeStep ?? 0) + 1)"
-          [disabled]="!canAdvance()">
+        <p-button 
+        label="Siguiente" 
+        icon="pi pi-arrow-right" 
+        iconPos="right" 
+        (onClick)="goToStep((activeStep ?? 0) + 1)"
+        [disabled]="!canAdvance()">
         </p-button>
       </div>
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -30,36 +30,37 @@ import { CardModule } from 'primeng/card';
 })
 export class DynamicForm implements OnChanges {
 
-  // 🔹 Llega el FORMULARIO COMPLETO
   @Input() formConfig!: DynamicFormConfig;
-
-  // 🔹 Página actual (por ahora fija)
   @Input() pageIndex = 0;
 
-  // 🔹 Campos reales a renderizar
-  fields: DynamicField[] = [];
+  @Output() validChange = new EventEmitter<boolean>();
 
+  fields: DynamicField[] = [];
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) { }
 
   ngOnChanges(): void {
-    
     if (!this.formConfig) return;
 
-    // 🔹 Extraemos los campos de la página actual
     this.fields = this.formConfig.pages[this.pageIndex];
 
     const group: Record<string, any> = {};
 
-    this.fields.forEach((field: DynamicField) => {
+    this.fields.forEach(field => {
       group[field.var_answer] = field.name.includes('*')
         ? ['', Validators.required]
         : [''];
     });
 
     this.form = this.fb.group(group);
+  
 
-    console.log('FORM VALUE:', this.form.value);
+    // 🔔 avisamos al exterior
+    this.validChange.emit(this.form.valid);
+
+    this.form.statusChanges.subscribe(() => {
+      this.validChange.emit(this.form.valid);
+    });
   }
 }
