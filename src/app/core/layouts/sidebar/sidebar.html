@@ -1,5 +1,23 @@
-<p-panelMenu
-  [model]="menu"
-  class="w-full"
-></p-panelMenu>
+<aside class="sidebar p-3">
 
+  <!-- Header del sidebar -->
+  <div class="sidebar-header">
+    <span class="logo">Firma</span>
+
+    <p-button
+      icon="pi pi-angle-left"
+      text
+      rounded
+      size="small"
+      (onClick)="toggleSidebar()"
+      class="toggle-btn">
+    </p-button>
+  </div>
+
+  <p-panelMenu
+    [model]="menuItems"
+    [multiple]="true"
+    styleClass="w-full">
+  </p-panelMenu>
+
+</aside>

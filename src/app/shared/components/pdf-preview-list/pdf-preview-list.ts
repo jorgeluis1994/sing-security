@@ -38,6 +38,7 @@ export class PdfPreviewList implements OnInit {
   selectedDoc!: SessionDocument;
 
   ngOnInit(): void {
+    
     if (this.documents?.length) {
       this.selectedDoc = this.documents[0];
     }
@@ -49,6 +50,7 @@ export class PdfPreviewList implements OnInit {
 
   openAnalyzeDialog(doc: SessionDocument): void {
     const result = this.facade.getAnalysis(doc);
+    
     if (!result) return;
 
     this.dialogService.open(AnalyzeDialog, {
@@ -56,7 +58,7 @@ export class PdfPreviewList implements OnInit {
       width: '70vw',
       height: '80vh',
       modal: true,
-      closable: true,   // 👈 ESTO
+      closable: true,   
       draggable: false,
       resizable: false,
       data: result,

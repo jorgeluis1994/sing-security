@@ -1,9 +1,10 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit, inject } from '@angular/core';
 import Quill from 'quill';
 import { ButtonModule } from 'primeng/button';
 import { PdfPreview, SignatureMark } from "../pdf-preview/pdf-preview";
 import { CardModule } from 'primeng/card';
 import { SessionDocument } from '../../../features/signing/services/document.service';
+import { SigningFacade } from '../../../features/signing/facades/signing.facade';
 
 @Component({
   selector: 'app-sing-pdf',
@@ -13,29 +14,67 @@ import { SessionDocument } from '../../../features/signing/services/document.ser
   templateUrl: './sing-pdf.html',
 })
 export class SingPdf {
-  
-  pdfUrl = 'assets/sample.pdf';
 
-  @ViewChild('pdfPreview') pdfPreview!: PdfPreview;
+  private readonly facade = inject(SigningFacade);
+
+  @Output() signaturePosition = new EventEmitter<SignatureMark>();
+
+  document = {
+    name: 'Documento IPFS de prueba',
+    pdfUrl: 'https://doc.firmasegura.work:8280/ipfs/QmTeY3esKmvdDd6FcJ6iWhqSkrqtcLdjB5iJyfup4sMrK8'
+  };
 
   signatures: SignatureMark[] = [];
 
-  selectedDoc!: SessionDocument;
+  ngOnInit() {
+  fetch(this.document.pdfUrl)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Error descargando PDF');
+      }
+      return res.blob();
+    })
+    .then(blob => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.facade.setDocuments([{
+          name: this.document.name,
+          dataUrl: reader.result as string,
+          size: blob.size,          // ✅ tamaño real
+          type: blob.type || 'application/pdf', // ✅ tipo real
+        }]);
+
+        console.log('📄 PDF cargado en SigningFacade');
+      };
+
+      reader.readAsDataURL(blob);
+    })
+    .catch(err => {
+      console.error('❌ Error cargando PDF desde IPFS', err);
+    });
+}
 
 
-  // 👉 botón Firmar
-  markSignature(): void {
-    if (!this.pdfPreview) return;
-
-    this.pdfPreview.onToggleSignature(true);
+  // 📍 viene del PdfPreview
+  onSignatureMarked(mark: SignatureMark) {
+    this.signatures.push(mark);
+    this.facade.addSignature(mark);   // 🔥 guardamos en el facade
   }
 
-  // 👉 recibir posición
-  onSignatureMarked(mark: SignatureMark): void {
-    console.log('📨 Firma recibida en padre:', mark);
-    this.signatures.push(mark);
+  // 🔐 BOTÓN FIRMAR
+  onSign() {
 
-    // aquí luego mandas al backend / IPFS
+    
+    this.facade.signGraphological('Jorge Luis').subscribe({
+      next: (result) => {
+        console.log('✅ Documento firmado', result);
+        // aquí: descargar, mostrar, subir IPFS, navegar, etc
+      },
+      error: (err) => {
+        console.error('❌ Error al firmar', err);
+      }
+    });
   }
 
 }

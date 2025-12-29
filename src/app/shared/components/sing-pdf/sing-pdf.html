@@ -1,17 +1,20 @@
-<div class="w-full flex justify-content-center mb-4">
+<!-- BOTÓN CENTRADO -->
+<div class="w-full flex justify-content-center align-items-center mb-4">
   <button
     pButton
     label="Firmar documento"
     icon="pi pi-pencil"
-    class="p-button-lg p-button-secondary px-6">
+    class="p-button-lg p-button-secondary px-6"
+    (click)="onSign()">
   </button>
 </div>
 
-
-<div class="col-12 p-4">
-  <app-pdf-preview
-    [pdfSrc]="pdfUrl"
-    (signaturePosition)="onSignatureMarked($event)"
-    #pdfPreview>
-  </app-pdf-preview>
+<!-- VISOR PDF CENTRADO Y MÁS ANGOSTO -->
+<div class="w-full flex justify-content-center p-4">
+  <div class="w-10 md:w-8 lg:w-6">
+    <app-pdf-preview
+      [pdfSrc]="document.pdfUrl"
+      (signaturePosition)="onSignatureMarked($event)">
+    </app-pdf-preview>
+  </div>
 </div>

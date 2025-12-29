@@ -2,14 +2,39 @@
 
   <p-step-list>
     @for (step of steps; track step; let i = $index) {
-      <p-step [value]="i" >
 
-        @if (step.icon) {
-          <i [class]="step.icon"></i>
-        }
+      <p-step [value]="i">
+        <ng-template
+          #content
+          let-activateCallback="activateCallback"
+          let-value="value"
+        >
+          <button
+            type="button"
+            class="bg-transparent border-0 flex flex-col items-center gap-1"
+            (click)="activateCallback()"
+          >
+            <!-- ÍCONO -->
+            @if (step.icon) {
+              <span
+                class="rounded-full border-2 w-10 h-10 flex items-center justify-center"
+                [ngClass]="{
+                  'bg-surface-0 text-primary border-primary': value <= activeIndex,
+                  'border-surface': value > activeIndex
+                }"
+              >
+                <i [class]="step.icon"></i>
+              </span>
+            }
 
-        <!-- <span>{{ step.label }}</span> -->
+            <!-- LABEL -->
+            <span class="text-sm">
+              {{ step.label }}
+            </span>
+          </button>
+        </ng-template>
       </p-step>
+
     }
   </p-step-list>
 

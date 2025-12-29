@@ -1,9 +1,0 @@
-/* Oculta los números */
-:host ::ng-deep .p-steps-number {
-  display: none;
-}
-
-/* Muestra el icono centrado */
-:host ::ng-deep .p-steps-item .pi {
-  font-size: 1.25rem;
-}

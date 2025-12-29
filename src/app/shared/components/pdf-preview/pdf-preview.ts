@@ -39,6 +39,8 @@ export class PdfPreview implements OnInit {
   @Input({ required: true }) pdfSrc!: string;
   @Output() signaturePosition = new EventEmitter<SignatureMark>();
 
+  
+
   loading = true;
   signatureMode = false;
 

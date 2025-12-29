@@ -6,31 +6,29 @@ export const SIDEBAR_MENU: MenuItem[] = [
     icon: 'pi pi-home',
     routerLink: '/',
   },
+
   {
-    label: 'Usuarios',
-    icon: 'pi pi-users',
-    routerLink: '/users',
+    label: 'Firmas',
+    icon: 'pi pi-file-signature',
+    items: [
+      {
+        label: 'Firmar documento',
+        icon: 'pi pi-pencil',
+        routerLink: '/sign/manual',
+      },
+      {
+        label: 'Firma automática',
+        icon: 'pi pi-bolt',
+        routerLink: '/sign/automatic',
+      },
+      {
+        label: 'Documentos firmados',
+        icon: 'pi pi-check-circle',
+        routerLink: '/sign/signed',
+      },
+    ],
   },
-    {
-    label: 'Usuarios',
-    icon: 'pi pi-users',
-    routerLink: '/users',
-  },
-    {
-    label: 'Usuarios',
-    icon: 'pi pi-users',
-    routerLink: '/users',
-  },
-    {
-    label: 'Usuarios',
-    icon: 'pi pi-users',
-    routerLink: '/users',
-  },
-    {
-    label: 'Usuarios',
-    icon: 'pi pi-users',
-    routerLink: '/users',
-  },
+
   {
     label: 'Configuración',
     icon: 'pi pi-cog',

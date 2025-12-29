@@ -1,0 +1,32 @@
+/* Contenedor principal */
+.layout {
+  display: flex;
+  min-height: 100vh; /* ocupa toda la pantalla */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;              /* ancho fijo */
+  background: #1f2937;       /* opcional */
+  color: white;
+  flex-shrink: 0;            /* NO se encoge */
+}
+
+/* Contenido derecho */
+.content {
+  flex: 1;                   /* ocupa el resto */
+  display: flex;
+  flex-direction: column;    /* toolbar arriba, contenido abajo */
+  background: #f5f6f8;
+}
+
+/* Toolbar arriba */
+.content app-toolbar {
+  flex-shrink: 0;
+}
+
+/* Router outlet */
+.content > .p-4 {
+  flex: 1;
+  overflow-y: auto;          /* scroll solo del contenido */
+}

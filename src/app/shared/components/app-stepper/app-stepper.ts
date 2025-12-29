@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { StepperModule } from 'primeng/stepper';
 
 @Component({
   selector: 'app-app-stepper',
   standalone: true,
-  imports: [StepperModule],
+  imports: [CommonModule,StepperModule],
   templateUrl: './app-stepper.html'
 })
 export class AppStepper {
