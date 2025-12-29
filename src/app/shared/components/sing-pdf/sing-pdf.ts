@@ -1,9 +1,7 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit, inject } from '@angular/core';
-import Quill from 'quill';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { PdfPreview, SignatureMark } from "../pdf-preview/pdf-preview";
 import { CardModule } from 'primeng/card';
-import { SessionDocument } from '../../../features/signing/services/document.service';
 import { SigningFacade } from '../../../features/signing/facades/signing.facade';
 
 @Component({
